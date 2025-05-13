@@ -9,5 +9,5 @@
   "env": {
     "NEXT_PUBLIC_API_BASE_URL": "https://crypto-rewards-api.herokuapp.com/api"
   },
-  "installCommand": "npm install --force"
+  "installCommand": "npm install --force --production=false"
 } 
