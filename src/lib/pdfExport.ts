@@ -124,7 +124,8 @@ export const generatePDF = (data: PlatformData[], filters: any = {}) => {
   });
   
   // Add a footer with a disclaimer
-  const pageCount = doc.internal.getNumberOfPages();
+  // Get the page count in a type-safe way
+  const pageCount = (doc as any)._pages ? (doc as any)._pages.length : 1;
   doc.setFontSize(8);
   doc.setTextColor(150, 150, 150);
   
