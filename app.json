@@ -1,0 +1,25 @@
+{
+  "name": "Crypto Rewards API",
+  "description": "Backend API for the Crypto Rewards Comparison website",
+  "repository": "https://github.com/yourusername/crypto-rewards-comparison-turkey",
+  "keywords": ["python", "flask", "api", "crypto", "staking"],
+  "env": {
+    "API_KEY": {
+      "description": "A secret key for API access",
+      "generator": "secret"
+    },
+    "CORS_ORIGINS": {
+      "description": "Comma-separated list of allowed origins for CORS",
+      "value": "http://localhost:3000,https://crypto-rewards-comparison-turkey.vercel.app"
+    },
+    "UPDATE_INTERVAL_HOURS": {
+      "description": "Hours between automatic data updates",
+      "value": "6"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ]
+} 

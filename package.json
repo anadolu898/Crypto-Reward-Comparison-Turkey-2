@@ -1,0 +1,40 @@
+{
+  "name": "crypto-rewards-comparison-turkey",
+  "version": "1.0.0",
+  "description": "A website to compare staking, campaign, and other rewards offered by crypto exchanges and DeFi programs available in Turkey.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "backend": "python backend/app.py",
+    "dev:backend": "cd backend && python app.py",
+    "dev:frontend": "next dev",
+    "dev:all": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\""
+  },
+  "keywords": [
+    "crypto",
+    "rewards",
+    "staking",
+    "turkey",
+    "comparison"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^20.10.5",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "axios": "^1.6.2",
+    "next": "^14.0.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.16",
+    "concurrently": "^8.2.2",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.4.0"
+  }
+}
