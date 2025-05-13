@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import ApySparkline from '../charts/ApySparkline';
 import StarRating from '../ui/StarRating';
+import { downloadPDF } from '../lib/pdfExport';
 
 // Define local types to avoid import issues
 interface StakingOffer {
@@ -45,12 +46,14 @@ interface ComparisonTableProps {
   data: PlatformData[];
   showFilters?: boolean;
   searchQuery?: string;
+  isPremium?: boolean;
 }
 
 export default function ComparisonTable({ 
   data, 
   showFilters = true,
-  searchQuery = ''
+  searchQuery = '',
+  isPremium = false
 }: ComparisonTableProps) {
   const router = useRouter();
   const [expandedPlatforms, setExpandedPlatforms] = useState<Set<string>>(new Set());
@@ -257,6 +260,24 @@ export default function ComparisonTable({
     return platformData?.logoUrl || defaultPath;
   };
   
+  // Function to export data as PDF
+  const handleExportPDF = () => {
+    if (!isPremium) {
+      // Show premium upgrade prompt
+      const shouldUpgrade = window.confirm(
+        'PDF raporu indirmek premium bir özelliktir. Premium aboneliğe yükseltmek ister misiniz?'
+      );
+      
+      if (shouldUpgrade) {
+        router.push('/subscription');
+      }
+      return;
+    }
+    
+    // Download PDF with current filters
+    downloadPDF(data, filters);
+  };
+  
   return (
     <div>
       {/* Filters Section */}
@@ -340,9 +361,19 @@ export default function ComparisonTable({
               <div className="flex justify-end mt-4">
                 <button
                   onClick={clearFilters}
-                  className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:text-primary"
+                  className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:text-primary mr-2"
                 >
                   Filtreleri Temizle
+                </button>
+                
+                <button
+                  onClick={handleExportPDF}
+                  className="px-4 py-2 text-sm bg-primary text-white rounded-md hover:bg-primary-dark flex items-center"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  PDF İndir
                 </button>
               </div>
             </div>

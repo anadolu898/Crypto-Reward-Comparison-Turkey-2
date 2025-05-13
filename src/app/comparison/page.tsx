@@ -47,6 +47,7 @@ export default function ComparisonPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isPremium, setIsPremium] = useState(false);
 
   // Use a more robust fetch pattern with useCallback
   const fetchData = useCallback(async () => {
@@ -62,6 +63,12 @@ export default function ComparisonPage() {
         const mockData = await apiService.getMockData();
         setData(mockData);
       }
+      
+      // Check if user is premium (in a real app, this would check user auth state)
+      // For demo, we can simulate this with localStorage or just set it to false
+      const userIsPremium = localStorage.getItem('isPremium') === 'true';
+      setIsPremium(userIsPremium);
+      
       setError(null);
     } catch (err) {
       console.error('Error fetching data:', err);
@@ -117,6 +124,67 @@ export default function ComparisonPage() {
       platformCount: data.length
     };
   }, [data]);
+
+  // Show premium upsell banner when not premium
+  const PremiumUpsellBanner = () => {
+    if (isPremium) return null;
+    
+    return (
+      <div className="mt-20 bg-gradient-to-r from-primary to-secondary rounded-large shadow-xl p-8 text-white overflow-hidden relative">
+        <div className="absolute right-0 bottom-0 transform translate-x-1/4 translate-y-1/4 opacity-30">
+          <svg className="w-64 h-64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M12 5V3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M12 21V19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M5 12H3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M21 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
+        <div className="md:flex items-center justify-between relative z-10">
+          <div className="mb-6 md:mb-0 md:mr-12">
+            <h2 className="text-2xl font-bold mb-3">Premium Özelliklere Geçin</h2>
+            <p className="text-white/80 max-w-2xl">
+              Premium üyelik ile daha detaylı karşılaştırmalar, gerçek zamanlı fiyat uyarıları, özel filtreler, API erişimi ve çok daha fazlasını elde edin. Staking stratejinizi üst seviyeye taşıyın.
+            </p>
+            <ul className="mt-4 grid grid-cols-2 gap-2">
+              <li className="flex items-center text-sm text-white/90">
+                <svg className="w-4 h-4 mr-1 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                Gerçek zamanlı uyarılar
+              </li>
+              <li className="flex items-center text-sm text-white/90">
+                <svg className="w-4 h-4 mr-1 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                Kişiselleştirilmiş öneriler
+              </li>
+              <li className="flex items-center text-sm text-white/90">
+                <svg className="w-4 h-4 mr-1 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                Detaylı analiz raporları
+              </li>
+              <li className="flex items-center text-sm text-white/90">
+                <svg className="w-4 h-4 mr-1 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                Rekabetçi tablolar
+              </li>
+            </ul>
+          </div>
+          <div className="text-center md:text-right">
+            <div className="text-sm text-white/70 mb-2">Aylık sadece</div>
+            <div className="text-3xl font-bold mb-3">99₺</div>
+            <Link href="/subscription" className="bg-accent hover:bg-opacity-90 text-dark font-semibold px-8 py-3 rounded-lg inline-block transition-all duration-200 hover:shadow-lg">
+              Premium'a Geç
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="min-h-screen">
@@ -227,6 +295,7 @@ export default function ComparisonPage() {
                 data={data} 
                 showFilters={true} 
                 searchQuery={searchQuery}
+                isPremium={isPremium}
               />
 
               {/* FAQ Section */}
@@ -253,59 +322,7 @@ export default function ComparisonPage() {
               </div>
 
               {/* Premium Upgrade Banner */}
-              <div className="mt-20 bg-gradient-to-r from-primary to-secondary rounded-large shadow-xl p-8 text-white overflow-hidden relative">
-                <div className="absolute right-0 bottom-0 transform translate-x-1/4 translate-y-1/4 opacity-30">
-                  <svg className="w-64 h-64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M12 5V3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M12 21V19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M5 12H3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M21 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-                <div className="md:flex items-center justify-between relative z-10">
-                  <div className="mb-6 md:mb-0 md:mr-12">
-                    <h2 className="text-2xl font-bold mb-3">Premium Özelliklere Geçin</h2>
-                    <p className="text-white/80 max-w-2xl">
-                      Premium üyelik ile daha detaylı karşılaştırmalar, gerçek zamanlı fiyat uyarıları, özel filtreler, API erişimi ve çok daha fazlasını elde edin. Staking stratejinizi üst seviyeye taşıyın.
-                    </p>
-                    <ul className="mt-4 grid grid-cols-2 gap-2">
-                      <li className="flex items-center text-sm text-white/90">
-                        <svg className="w-4 h-4 mr-1 text-accent" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                        Gerçek zamanlı uyarılar
-                      </li>
-                      <li className="flex items-center text-sm text-white/90">
-                        <svg className="w-4 h-4 mr-1 text-accent" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                        Kişiselleştirilmiş öneriler
-                      </li>
-                      <li className="flex items-center text-sm text-white/90">
-                        <svg className="w-4 h-4 mr-1 text-accent" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                        Detaylı analiz raporları
-                      </li>
-                      <li className="flex items-center text-sm text-white/90">
-                        <svg className="w-4 h-4 mr-1 text-accent" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                        Rekabetçi tablolar
-                      </li>
-                    </ul>
-                  </div>
-                  <div className="text-center md:text-right">
-                    <div className="text-sm text-white/70 mb-2">Aylık sadece</div>
-                    <div className="text-3xl font-bold mb-3">99₺</div>
-                    <Link href="/subscription" className="bg-accent hover:bg-opacity-90 text-dark font-semibold px-8 py-3 rounded-lg inline-block transition-all duration-200 hover:shadow-lg">
-                      Premium'a Geç
-                    </Link>
-                  </div>
-                </div>
-              </div>
+              <PremiumUpsellBanner />
             </>
           )}
 

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -16,10 +16,10 @@ const subscriptionPlans = [
       { name: 'Platformlar hakkında temel bilgiler', included: true },
       { name: 'Günlük veri güncellemeleri', included: false },
       { name: 'Gelişmiş tablolar ve grafikler', included: false },
-      { name: 'Fiyat uyarıları ve bildirimler', included: false },
-      { name: 'Gerçek zamanlı APY güncellemeleri', included: false },
-      { name: 'Kampanya uyarıları', included: false },
-      { name: 'Tarihsel veriler ve analizler', included: false },
+      { name: 'Daha detaylı platform analizleri', included: false },
+      { name: 'Gelişmiş veri filtreleme ve sıralama', included: false },
+      { name: 'Özelleştirilmiş karşılaştırma görünümü', included: false },
+      { name: 'PDF raporu indirme', included: false },
     ],
     buttonText: 'Mevcut Plan',
     popular: false,
@@ -33,13 +33,13 @@ const subscriptionPlans = [
     features: [
       { name: 'Temel karşılaştırma tablosu', included: true },
       { name: 'Gelişmiş filtreleme seçenekleri', included: true },
-      { name: 'Platform detayları ve analizler', included: true },
-      { name: 'Saatlik veri güncellemeleri', included: true },
+      { name: 'Platformlar hakkında temel bilgiler', included: true },
+      { name: 'Günlük veri güncellemeleri', included: true },
       { name: 'Gelişmiş tablolar ve grafikler', included: true },
-      { name: 'Fiyat uyarıları ve bildirimler', included: true },
-      { name: 'Gerçek zamanlı APY güncellemeleri', included: true },
-      { name: 'Kampanya uyarıları', included: true },
-      { name: 'Son 1 aylık tarihsel veriler', included: true },
+      { name: 'Daha detaylı platform analizleri', included: true },
+      { name: 'Gelişmiş veri filtreleme ve sıralama', included: true },
+      { name: 'Özelleştirilmiş karşılaştırma görünümü', included: true },
+      { name: 'PDF raporu indirme', included: true },
     ],
     buttonText: 'Şimdi Abone Ol',
     popular: true,
@@ -53,13 +53,13 @@ const subscriptionPlans = [
     features: [
       { name: 'Temel karşılaştırma tablosu', included: true },
       { name: 'Gelişmiş filtreleme seçenekleri', included: true },
-      { name: 'Platform detayları ve analizler', included: true },
-      { name: 'Saatlik veri güncellemeleri', included: true },
+      { name: 'Platformlar hakkında temel bilgiler', included: true },
+      { name: 'Günlük veri güncellemeleri', included: true },
       { name: 'Gelişmiş tablolar ve grafikler', included: true },
-      { name: 'Fiyat uyarıları ve bildirimler', included: true },
-      { name: 'Gerçek zamanlı APY güncellemeleri', included: true },
-      { name: 'Kampanya uyarıları', included: true },
-      { name: 'Tam tarihsel veri erişimi', included: true },
+      { name: 'Daha detaylı platform analizleri', included: true },
+      { name: 'Gelişmiş veri filtreleme ve sıralama', included: true },
+      { name: 'Özelleştirilmiş karşılaştırma görünümü', included: true },
+      { name: 'PDF raporu indirme', included: true },
     ],
     buttonText: 'Şimdi Abone Ol',
     popular: false,
@@ -70,12 +70,48 @@ const subscriptionPlans = [
 export default function SubscriptionPage() {
   const router = useRouter();
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+  const [isPremium, setIsPremium] = useState(false);
+  
+  // Check if user is premium when component mounts
+  useEffect(() => {
+    const userIsPremium = localStorage.getItem('isPremium') === 'true';
+    setIsPremium(userIsPremium);
+  }, []);
 
   const handleSubscribe = (planName: string) => {
     setSelectedPlan(planName);
-    // In a real application, this would redirect to a checkout page
-    // For now, we'll just set the selected plan
-    alert(`Abone olunacak plan: ${planName}. Bu özellik yakında aktif olacaktır.`);
+    
+    // For demo purposes only - in a real app this would integrate with a payment gateway
+    if (planName !== 'Ücretsiz') {
+      const shouldProceed = window.confirm(
+        `Bu bir demo uygulamasıdır. Gerçek bir ödeme yapılmayacaktır. "${planName}" planına geçiş yapmak istediğinizden emin misiniz?`
+      );
+      
+      if (shouldProceed) {
+        // Set the user as premium in localStorage
+        localStorage.setItem('isPremium', 'true');
+        setIsPremium(true);
+        
+        // Show success message
+        alert(`Tebrikler! ${planName} aboneliğiniz başarıyla etkinleştirildi. Premium özelliklere erişebilirsiniz.`);
+        
+        // Redirect to comparison page to try premium features
+        router.push('/comparison');
+      }
+    }
+  };
+  
+  // Function to cancel premium (for demo purposes)
+  const handleCancelPremium = () => {
+    const shouldCancel = window.confirm(
+      'Premium üyeliğinizi iptal etmek istediğinizden emin misiniz?'
+    );
+    
+    if (shouldCancel) {
+      localStorage.removeItem('isPremium');
+      setIsPremium(false);
+      alert('Premium üyeliğiniz iptal edildi.');
+    }
   };
 
   return (
@@ -87,6 +123,24 @@ export default function SubscriptionPage() {
             Kripto para yatırımlarınızdan maksimum getiri elde etmek için premium özelliklere erişin ve
             en iyi fırsatları kaçırmayın.
           </p>
+          
+          {/* Show premium status */}
+          {isPremium && (
+            <div className="mt-4 mb-6 inline-block bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-4 py-2 rounded-md">
+              <div className="flex items-center">
+                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span className="font-medium">Premium üyeliğiniz aktif!</span>
+                <button 
+                  onClick={handleCancelPremium}
+                  className="ml-4 text-sm text-red-600 dark:text-red-400 hover:underline"
+                >
+                  İptal Et
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Subscription Plans */}
