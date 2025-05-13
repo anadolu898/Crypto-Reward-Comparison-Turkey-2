@@ -33,15 +33,15 @@ class BtcTurkScraper:
             console_handler.setFormatter(formatter)
             self.logger.addHandler(console_handler)
         
-        self.base_url = "https://www.btcturk.com"
-        self.staking_url = "https://www.btcturk.com/tr/staking"
-        self.campaigns_url = "https://www.btcturk.com/tr/campaigns"
+        self.base_url = "https://btcturk.com"
+        self.staking_url = "https://btcturk.com/tr/staking"
+        self.campaigns_url = "https://btcturk.com/tr/campaigns"
         self.headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
             "Accept": "application/json, text/plain, */*",
             "Accept-Language": "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
-            "Origin": "https://www.btcturk.com",
-            "Referer": "https://www.btcturk.com/"
+            "Origin": "https://btcturk.com",
+            "Referer": "https://btcturk.com/"
         }
         
         # Ensure data directory exists
@@ -55,8 +55,13 @@ class BtcTurkScraper:
         try:
             self.logger.info("Fetching staking data from BtcTurk...")
             
-            # Make request to the staking page
-            response = requests.get(self.staking_url, headers=self.headers, timeout=30)
+            # Make request to the staking page with SSL verification disabled
+            response = requests.get(
+                self.staking_url, 
+                headers=self.headers, 
+                timeout=30,
+                verify=False  # Disable SSL verification for troubleshooting
+            )
             
             if response.status_code != 200:
                 self.logger.error(f"Failed to fetch staking page: {response.status_code}")
@@ -182,8 +187,13 @@ class BtcTurkScraper:
         try:
             self.logger.info("Fetching campaign data from BtcTurk...")
             
-            # Make request to the campaigns page
-            response = requests.get(self.campaigns_url, headers=self.headers, timeout=30)
+            # Make request to the campaigns page with SSL verification disabled
+            response = requests.get(
+                self.campaigns_url, 
+                headers=self.headers, 
+                timeout=30,
+                verify=False  # Disable SSL verification for troubleshooting
+            )
             
             if response.status_code != 200:
                 self.logger.error(f"Failed to fetch campaigns page: {response.status_code}")

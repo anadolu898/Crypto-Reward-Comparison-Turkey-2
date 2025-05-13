@@ -10,7 +10,11 @@
     "backend": "python backend/app.py",
     "dev:backend": "cd backend && python app.py",
     "dev:frontend": "next dev",
-    "dev:all": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\""
+    "dev:all": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "scraper:start": "./start-scraper.sh",
+    "scraper:stop": "./stop-scraper.sh",
+    "scraper:check": "./check-scraper.sh",
+    "scraper:run": "cd backend && python scraper_service.py"
   },
   "keywords": [
     "crypto",

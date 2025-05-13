@@ -5,6 +5,7 @@ A comprehensive website to compare staking rewards, campaigns, and other offers 
 ## Features
 
 - **Live Data Scraping**: Automatically fetches and updates data from major Turkish crypto exchanges
+- **Autonomous Updates**: Background service that runs continuously, even when your computer sleeps
 - **Comparison Tool**: Compare staking APY rates, lockup periods, and minimum requirements
 - **Platform Details**: View detailed information about each platform's offerings
 - **Responsive Design**: Works on desktop and mobile devices
@@ -76,6 +77,37 @@ Or run them separately:
 
 The website will be accessible at http://localhost:3000 and the API at http://localhost:5001/api.
 
+## Autonomous Data Scraping
+
+The application includes a background service that can continuously scrape data from crypto exchanges, even when you're not actively using the website.
+
+### Managing the Scraper Service
+
+To start the background scraper service:
+```bash
+./start-scraper.sh
+```
+
+To check the status of the scraper service:
+```bash
+./check-scraper.sh
+```
+
+To stop the service:
+```bash
+./stop-scraper.sh
+```
+
+### Scraper Configuration
+
+The scraper service:
+- Updates data every 3 hours by default
+- Performs a complete refresh at midnight
+- Falls back to cached data if scraping fails
+- Logs activity to `backend/logs/scraper_service.log`
+
+You can modify the update interval by setting the `UPDATE_INTERVAL_HOURS` environment variable.
+
 ## Project Structure
 
 ```
@@ -91,7 +123,8 @@ The website will be accessible at http://localhost:3000 and the API at http://lo
 │   │   └── paribu.py
 │   ├── data/             # Scraped data storage
 │   ├── logs/             # Backend logs
-│   └── app.py            # Flask application
+│   ├── app.py            # Flask API application
+│   └── scraper_service.py # Autonomous scraping service
 ├── public/               # Static assets
 └── ...
 ```
@@ -106,7 +139,8 @@ The application uses a combination of approaches to get the latest data:
 
 Scraping happens:
 - When the backend starts
-- Every 6 hours automatically
+- Every 3 hours automatically via the service
+- Daily at midnight for complete refresh
 - When manually triggered via API
 
 ## Contributing
