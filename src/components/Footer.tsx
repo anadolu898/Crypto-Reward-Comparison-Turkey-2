@@ -145,7 +145,7 @@ const Footer = () => {
         </div>
         
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; {new Date().getFullYear()} KriptoKarşılaştır. Tüm hakları saklıdır.</p>
+          <p>&copy; {new Date().getFullYear()} KriptoKarşılaştır, bir RightBehind şirketidir. Tüm hakları saklıdır.</p>
           <p className="mt-2 text-sm">
             Bu site yatırım tavsiyesi vermez. Kripto para yatırımları yüksek risk içerir.
           </p>

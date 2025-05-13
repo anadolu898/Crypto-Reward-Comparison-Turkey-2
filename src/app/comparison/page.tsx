@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import ComparisonTable from '../../components/ComparisonTable';
 import { apiService } from '../../lib/api';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 // Define local types to avoid import issues
 interface StakingOffer {
@@ -41,40 +42,51 @@ interface PlatformData {
 }
 
 export default function ComparisonPage() {
+  const router = useRouter();
   const [data, setData] = useState<PlatformData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        // Try to fetch data from the API
-        const response = await apiService.getAllRewards();
-        
-        if (response.success && response.data.length > 0) {
-          setData(response.data);
-        } else {
-          // If the API fails or returns no data, use mock data
-          const mockData = await apiService.getMockData();
-          setData(mockData);
-        }
-        setError(null);
-      } catch (err) {
-        console.error('Error fetching data:', err);
-        setError('Veri yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.');
-        
-        // Use mock data as fallback
+  // Use a more robust fetch pattern with useCallback
+  const fetchData = useCallback(async () => {
+    try {
+      setLoading(true);
+      // Try to fetch data from the API
+      const response = await apiService.getAllRewards();
+      
+      if (response.success && response.data.length > 0) {
+        setData(response.data);
+      } else {
+        // If the API fails or returns no data, use mock data
         const mockData = await apiService.getMockData();
         setData(mockData);
-      } finally {
-        setLoading(false);
       }
-    };
-
-    fetchData();
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching data:', err);
+      setError('Veri yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.');
+      
+      // Use mock data as fallback
+      try {
+        const mockData = await apiService.getMockData();
+        setData(mockData);
+      } catch (mockErr) {
+        console.error('Error loading mock data:', mockErr);
+      }
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchData();
+    
+    // Add cleanup function
+    return () => {
+      // Cancel any pending requests or timeouts if needed
+    };
+  }, [fetchData]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);

@@ -1,4 +1,8 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const subscriptionPlans = [
   {
@@ -64,6 +68,16 @@ const subscriptionPlans = [
 ];
 
 export default function SubscriptionPage() {
+  const router = useRouter();
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+
+  const handleSubscribe = (planName: string) => {
+    setSelectedPlan(planName);
+    // In a real application, this would redirect to a checkout page
+    // For now, we'll just set the selected plan
+    alert(`Abone olunacak plan: ${planName}. Bu özellik yakında aktif olacaktır.`);
+  };
+
   return (
     <div className="py-12 bg-light dark:bg-dark">
       <div className="container mx-auto px-4">
@@ -93,7 +107,10 @@ export default function SubscriptionPage() {
                 <p className="text-gray-600 dark:text-gray-400 mb-6">
                   {plan.description}
                 </p>
-                <button className={`w-full py-3 rounded-md font-semibold ${plan.buttonVariant === 'primary' ? 'bg-primary text-white hover:bg-secondary' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'} transition-colors`}>
+                <button 
+                  onClick={() => plan.buttonVariant === 'primary' ? handleSubscribe(plan.name) : null}
+                  className={`w-full py-3 rounded-md font-semibold ${plan.buttonVariant === 'primary' ? 'bg-primary text-white hover:bg-secondary' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'} transition-colors`}
+                >
                   {plan.buttonText}
                 </button>
               </div>
@@ -172,9 +189,9 @@ export default function SubscriptionPage() {
           <p className="text-gray-600 dark:text-gray-400 mb-6">
             Detaylı bilgi için bizimle iletişime geçebilirsiniz.
           </p>
-          <a href="/contact" className="btn-primary">
+          <Link href="/about#contact" className="btn-primary">
             İletişime Geçin
-          </a>
+          </Link>
         </div>
       </div>
     </div>
