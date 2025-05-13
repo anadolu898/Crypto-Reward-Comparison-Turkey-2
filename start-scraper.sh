@@ -7,6 +7,10 @@ echo "Starting Crypto Rewards Scraper Service..."
 # Ensure we have the right directories
 mkdir -p backend/logs backend/data
 
+# Make sure backend/logs/launcher-error.log is empty
+> backend/logs/launcher-error.log
+> backend/logs/launcher-output.log
+
 # Copy the plist file to the user's LaunchAgents directory
 PLIST_PATH="$HOME/Library/LaunchAgents/com.cryptoturkey.scraper.plist"
 
@@ -31,4 +35,4 @@ else
 fi
 
 echo ""
-echo "You can stop the service anytime by running: ./stop-scraper.sh" 
+echo "You can stop the service anytime by running: ./stop-scraper.sh"

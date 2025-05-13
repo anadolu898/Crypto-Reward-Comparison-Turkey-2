@@ -1,0 +1,11 @@
+npm warn config production Use `--omit=dev` instead.
+npm warn using --force Recommended protections disabled.
+
+> crypto-rewards-comparison-turkey@1.0.0 dev:frontend
+> next dev
+
+  ▲ Next.js 14.2.28
+  - Local:        http://localhost:3000
+
+ ✓ Starting...
+ ✓ Ready in 1421ms

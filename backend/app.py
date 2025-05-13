@@ -2,7 +2,7 @@ import os
 import json
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from datetime import datetime
+from datetime import datetime, timedelta
 import logging
 from scrapers.btcturk import BtcTurkScraper
 from scrapers.paribu import ParibuScraper
@@ -15,6 +15,12 @@ import threading
 import time
 import schedule
 from dotenv import load_dotenv
+
+# Initialize auth modules
+from flask_jwt_extended import JWTManager
+from email_service import mail, init_app as init_email
+from auth import init_app as init_auth
+from migrations import init_db
 
 # Load environment variables
 load_dotenv()
@@ -44,6 +50,25 @@ logger = logging.getLogger("api")
 # Create Flask app
 app = Flask(__name__)
 
+# Configure app settings
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
+app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', app.config['SECRET_KEY'])
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
+app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(days=7)
+app.config['JWT_BLACKLIST_ENABLED'] = True
+app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
+
+# Email configuration
+app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
+app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 587))
+app.config['MAIL_USE_TLS'] = os.environ.get('MAIL_USE_TLS', 'True').lower() == 'true'
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', 'noreply@cryptorewards.com')
+
+# Initialize JWT
+jwt = JWTManager(app)
+
 # Configure CORS
 CORS_ORIGINS = os.environ.get('CORS_ORIGINS', '*')
 CORS(app, resources={r"/api/*": {"origins": CORS_ORIGINS}})
@@ -51,6 +76,11 @@ CORS(app, resources={r"/api/*": {"origins": CORS_ORIGINS}})
 # Ensure directories exist
 os.makedirs(DATA_DIR, exist_ok=True)
 os.makedirs(LOGS_DIR, exist_ok=True)
+
+# Initialize components
+init_db(app)
+init_email(app)
+init_auth(app)
 
 # List of available scrapers
 scrapers = {

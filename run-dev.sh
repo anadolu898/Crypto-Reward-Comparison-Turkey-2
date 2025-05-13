@@ -12,6 +12,10 @@ port_in_use() {
 # Create necessary directories
 mkdir -p backend/logs backend/data public/images
 
+# Activate virtual environment
+echo "Activating virtual environment..."
+source .venv/bin/activate
+
 # Check if the backend port is available
 if port_in_use 5001; then
   echo "Warning: Port 5001 is already in use. The backend server may not start correctly."
@@ -19,7 +23,7 @@ fi
 
 # Start the backend server
 echo "Starting backend server..."
-cd backend && python3 app.py &
+cd backend && python app.py &
 BACKEND_PID=$!
 
 # Wait for the backend to start

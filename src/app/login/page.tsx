@@ -1,7 +1,70 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    rememberMe: false
+  });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [needsVerification, setNeedsVerification] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+    setNeedsVerification(false);
+
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+      const response = await axios.post(`${apiUrl}/api/auth/login`, formData);
+      
+      // Store tokens in localStorage or sessionStorage based on rememberMe
+      const storage = formData.rememberMe ? localStorage : sessionStorage;
+      storage.setItem('accessToken', response.data.accessToken);
+      storage.setItem('refreshToken', response.data.refreshToken);
+      storage.setItem('user', JSON.stringify(response.data.user));
+      
+      // Redirect to dashboard
+      router.push('/account/dashboard');
+      
+    } catch (error: any) {
+      setLoading(false);
+      
+      // Check if the account needs verification
+      if (error.response?.data?.needsVerification) {
+        setNeedsVerification(true);
+        setError(error.response.data.error);
+        return;
+      }
+      
+      if (error.response?.data?.error) {
+        setError(error.response.data.error);
+      } else {
+        setError('Giriş sırasında bir hata oluştu. Lütfen daha sonra tekrar deneyin.');
+      }
+    }
+  };
+
+  const handleVerificationRedirect = () => {
+    router.push(`/verify-email?email=${encodeURIComponent(formData.email)}`);
+  };
+
   return (
     <div className="py-16 bg-light dark:bg-dark min-h-[calc(100vh-64px)]">
       <div className="container mx-auto px-4">
@@ -14,7 +77,21 @@ export default function LoginPage() {
           </div>
           
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
-            <form>
+            {error && (
+              <div className="bg-red-50 dark:bg-red-900/30 p-4 rounded-lg mb-6">
+                <p className="text-red-800 dark:text-red-200">{error}</p>
+                {needsVerification && (
+                  <button 
+                    onClick={handleVerificationRedirect}
+                    className="mt-2 text-sm font-medium text-primary hover:text-secondary"
+                  >
+                    Doğrulama e-postasını yeniden gönder
+                  </button>
+                )}
+              </div>
+            )}
+            
+            <form onSubmit={handleSubmit}>
               <div className="mb-6">
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   E-posta Adresi
@@ -23,6 +100,8 @@ export default function LoginPage() {
                   type="email"
                   id="email"
                   name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   className="w-full border border-gray-300 dark:border-gray-700 rounded-md py-2 px-3 bg-white dark:bg-gray-900 focus:ring-primary focus:border-primary"
                   placeholder="ornek@email.com"
                   required
@@ -42,6 +121,8 @@ export default function LoginPage() {
                   type="password"
                   id="password"
                   name="password"
+                  value={formData.password}
+                  onChange={handleChange}
                   className="w-full border border-gray-300 dark:border-gray-700 rounded-md py-2 px-3 bg-white dark:bg-gray-900 focus:ring-primary focus:border-primary"
                   placeholder="••••••••"
                   required
@@ -51,17 +132,23 @@ export default function LoginPage() {
               <div className="flex items-center mb-6">
                 <input
                   type="checkbox"
-                  id="remember"
-                  name="remember"
+                  id="rememberMe"
+                  name="rememberMe"
+                  checked={formData.rememberMe}
+                  onChange={handleChange}
                   className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
                 />
-                <label htmlFor="remember" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                   Beni Hatırla
                 </label>
               </div>
               
-              <button type="submit" className="w-full btn-primary py-2.5">
-                Giriş Yap
+              <button 
+                type="submit" 
+                className="w-full btn-primary py-2.5"
+                disabled={loading}
+              >
+                {loading ? 'Giriş Yapılıyor...' : 'Giriş Yap'}
               </button>
               
               <div className="mt-6 text-center">

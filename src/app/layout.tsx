@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import dynamic from 'next/dynamic';
+import { AuthProvider } from '../lib/auth/AuthContext';
 
 // Dynamically import ThemeProvider with SSR disabled
 const ThemeProvider = dynamic(() => import('../components/layout/ThemeProvider').then(mod => mod.default), {
@@ -11,8 +12,8 @@ const ThemeProvider = dynamic(() => import('../components/layout/ThemeProvider')
 });
 
 export const metadata: Metadata = {
-  title: 'Crypto Rewards Comparison - Turkey',
-  description: 'Compare staking, campaign, and other rewards offered by crypto exchanges and DeFi programs available in Turkey.',
+  title: 'Crypto Rewards Türkiye - Kripto Para Staking ve Kampanya Karşılaştırma',
+  description: 'Türkiye\'deki kripto borsalarında sunulan staking, kampanya ve diğer ödül fırsatlarını karşılaştırın ve en iyi getiriyi elde edin.',
 };
 
 export default function RootLayout({
@@ -23,15 +24,17 @@ export default function RootLayout({
   return (
     <html lang="tr">
       <body>
-        <ThemeProvider>
-          <div className="flex flex-col min-h-screen">
-            <Navbar />
-            <main className="flex-grow">
-              {children}
-            </main>
-            <Footer />
-          </div>
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider>
+            <div className="flex flex-col min-h-screen">
+              <Navbar />
+              <main className="flex-grow">
+                {children}
+              </main>
+              <Footer />
+            </div>
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );
