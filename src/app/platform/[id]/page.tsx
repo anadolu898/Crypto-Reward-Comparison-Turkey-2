@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { PlatformData, StakingOffer, Campaign, apiService } from '../../../lib/api';
+import { PlatformData, StakingOffer, Campaign } from '../../../lib/types';
+import { apiService } from '../../../lib/api';
 import Link from 'next/link';
 
 interface PlatformPageProps {
