@@ -3,7 +3,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { StakingOffer, PlatformData, AssetCategory, ChainType } from '../lib/api';
+import { StakingOffer, PlatformData, AssetCategory, ChainType } from '../lib/types';
 import ApySparkline from './charts/ApySparkline';
 import StarRating from './ui/StarRating';
 
