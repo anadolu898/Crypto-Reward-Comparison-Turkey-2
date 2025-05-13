@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <rect width="200" height="200" fill="#032346" rx="20" ry="20"/>
+  <text x="100" y="115" fill="#f7931a" font-family="Arial, sans-serif" font-weight="bold" font-size="32" text-anchor="middle">BtcTurk</text>
+  <circle cx="100" cy="70" r="30" fill="#f7931a"/>
+  <text x="100" y="80" fill="white" font-family="Arial, sans-serif" font-weight="bold" font-size="36" text-anchor="middle">₿</text>
+</svg> 

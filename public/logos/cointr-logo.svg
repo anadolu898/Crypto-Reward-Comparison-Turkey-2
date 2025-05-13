@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <rect width="200" height="200" fill="#27ae60" rx="20" ry="20"/>
+  <text x="100" y="115" fill="white" font-family="Arial, sans-serif" font-weight="bold" font-size="32" text-anchor="middle">CoinTR</text>
+  <circle cx="100" cy="65" r="30" fill="white" opacity="0.8"/>
+  <text x="100" y="75" fill="#27ae60" font-family="Arial, sans-serif" font-weight="bold" font-size="32" text-anchor="middle">₺</text>
+</svg> 

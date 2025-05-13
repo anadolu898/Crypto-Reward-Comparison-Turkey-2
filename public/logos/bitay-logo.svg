@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <rect width="200" height="200" fill="#16a085" rx="20" ry="20"/>
+  <text x="100" y="115" fill="white" font-family="Arial, sans-serif" font-weight="bold" font-size="32" text-anchor="middle">Bitay</text>
+  <rect x="65" y="50" width="70" height="40" fill="white" rx="5" ry="5"/>
+  <text x="100" y="78" fill="#16a085" font-family="Arial, sans-serif" font-weight="bold" font-size="28" text-anchor="middle">₿</text>
+</svg> 

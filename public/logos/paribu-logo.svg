@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <rect width="200" height="200" fill="#ff6600" rx="20" ry="20"/>
+  <text x="100" y="115" fill="white" font-family="Arial, sans-serif" font-weight="bold" font-size="36" text-anchor="middle">Paribu</text>
+  <path d="M100,55 C80,55 65,70 65,90 C65,110 80,125 100,125 L100,110 C90,110 80,100 80,90 C80,80 90,70 100,70 L100,55" fill="white"/>
+</svg> 
