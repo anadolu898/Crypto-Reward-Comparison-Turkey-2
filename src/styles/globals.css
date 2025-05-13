@@ -8,6 +8,13 @@
   --foreground-rgb: 15, 17, 21;
   --background-start-rgb: 248, 249, 250;
   --background-end-rgb: 255, 255, 255;
+  --color-primary: #3B82F6;
+  --color-secondary: #2563EB;
+  --color-accent: #10B981;
+  --color-accent-alt: #059669;
+  --color-dark: #1E293B;
+  --color-light: #F8FAFC;
+  --color-dark-card: #1E293B;
 }
 
 .dark {
@@ -54,5 +61,22 @@ body {
 
   .container {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .rounded-large {
+    @apply rounded-xl;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
   }
 } 
