@@ -185,7 +185,7 @@ if __name__ == "__main__":
     scheduler_thread.start()
     
     # Get port from environment variable (for Heroku/production)
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 5001))
     
     # Start the Flask app
     app.run(host='0.0.0.0', port=port, debug=False) 

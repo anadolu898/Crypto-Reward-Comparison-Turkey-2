@@ -1,168 +1,126 @@
-# Crypto Rewards Comparison Turkey
+# Turkish Crypto Rewards Comparison Website
 
-A website to compare staking, campaign, and other rewards offered by crypto exchanges and DeFi programs available in Turkey.
-
-## Overview
-
-This project provides a platform for Turkish cryptocurrency investors to compare and analyze rewards, staking rates, and campaigns from various exchanges and DeFi platforms operating in Turkey. The website helps users make informed decisions by providing up-to-date information on the best available returns for their crypto assets.
+A comprehensive website to compare staking rewards, campaigns, and other offers from cryptocurrency exchanges and platforms available in Turkey.
 
 ## Features
 
-- **Comprehensive Comparison Tables**: Compare staking APY rates, campaign rewards, and minimum staking amounts across different platforms.
-- **Detailed Platform Information**: Access individual platform pages with detailed information on all available offers.
-- **Filterable Data**: Filter comparison results by platform, cryptocurrency, APY rate, and more.
-- **Subscription System**: Free tier with basic information and premium tier with advanced features.
-- **Mobile Responsive Design**: Access the platform from any device with a seamless experience.
+- **Live Data Scraping**: Automatically fetches and updates data from major Turkish crypto exchanges
+- **Comparison Tool**: Compare staking APY rates, lockup periods, and minimum requirements
+- **Platform Details**: View detailed information about each platform's offerings
+- **Responsive Design**: Works on desktop and mobile devices
 
-## Project Structure
+## Supported Platforms
 
-The project is divided into two main components:
+- BtcTurk
+- Paribu
+- (More to come)
 
-### Frontend
+## Tech Stack
 
-- Built with Next.js and React
-- Responsive design using Tailwind CSS
-- TypeScript for type safety
-- Client-side data fetching with Axios
-
-### Backend
-
-- Python with Flask REST API
-- Data scrapers for various crypto platforms
-- Scheduled data updates
-- JSON-based data storage
+- **Frontend**: Next.js, TailwindCSS, React
+- **Backend**: Flask (Python), BeautifulSoup for scraping
+- **Data**: Real-time data scraped from exchange websites with fallback to mock data
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js (v14 or later)
-- Python (v3.8 or later)
-- npm or yarn
+- Node.js 16+ and npm
+- Python 3.9+
+- Virtual environment (recommended)
 
 ### Installation
 
 1. Clone the repository:
-   ```
+   ```bash
    git clone https://github.com/yourusername/crypto-rewards-comparison-turkey.git
    cd crypto-rewards-comparison-turkey
    ```
 
 2. Install frontend dependencies:
-   ```
+   ```bash
    npm install
    ```
 
-3. Install backend dependencies:
+3. Set up Python virtual environment:
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
    ```
+
+4. Install backend dependencies:
+   ```bash
    pip install -r backend/requirements.txt
    ```
 
-### Running the Application
+### Running the application
 
-You can run the frontend and backend separately or together:
-
-#### Run both frontend and backend together:
-```
-npm run dev:all
-```
-
-#### Run only the frontend:
-```
-npm run dev:frontend
-```
-
-#### Run only the backend:
-```
-npm run dev:backend
-```
-
-The application will be available at:
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:5000
-
-## Testing
-
-### Frontend Testing
-
-To test the frontend:
+You can run both the frontend and backend together using:
 
 ```bash
-npm run test
+./run-dev.sh
 ```
 
-The frontend tests check:
-1. Component rendering
-2. User interactions
-3. API integration
+Or run them separately:
 
-### Backend Testing
+1. Start the backend:
+   ```bash
+   cd backend
+   python app.py
+   ```
 
-To test the backend:
+2. In a separate terminal, start the frontend:
+   ```bash
+   npm run dev:frontend
+   ```
 
-```bash
-cd backend
-python -m unittest discover tests
-```
+The website will be accessible at http://localhost:3000 and the API at http://localhost:5001/api.
 
-The backend tests check:
-1. API endpoints
-2. Data scrapers
-3. Data processing functions
-
-### Manual Testing
-
-For manual testing, use the following test accounts:
-
-- **Free Tier**: 
-  - Email: test@example.com
-  - Password: testpassword123
-
-- **Premium Tier**: 
-  - Email: premium@example.com
-  - Password: premiumpassword123
-
-## API Endpoints
-
-- `GET /api/rewards` - Get all rewards data from all platforms
-- `GET /api/rewards/<platform>` - Get rewards data for a specific platform
-- `POST /api/update` - Trigger a manual update of the data (requires API key)
-
-## Deployment
-
-### Frontend
-
-The Next.js frontend can be deployed to Vercel:
+## Project Structure
 
 ```
-npm run build
+/
+├── src/                  # Frontend code
+│   ├── app/              # Next.js app directory
+│   ├── components/       # React components
+│   ├── lib/              # Utility functions and API client
+│   └── styles/           # Global styles
+├── backend/              # Backend code
+│   ├── scrapers/         # Web scrapers for each platform
+│   │   ├── btcturk.py
+│   │   └── paribu.py
+│   ├── data/             # Scraped data storage
+│   ├── logs/             # Backend logs
+│   └── app.py            # Flask application
+├── public/               # Static assets
+└── ...
 ```
 
-### Backend
+## Data Scraping
 
-The Flask backend can be deployed to any Python-supporting platform like Heroku, AWS, or DigitalOcean:
+The application uses a combination of approaches to get the latest data:
 
-```
-cd backend
-gunicorn app:app
-```
+1. First, it attempts to scrape real data from the exchange websites
+2. If scraping fails, it falls back to previously saved data
+3. If no data exists, it uses hardcoded mock data
+
+Scraping happens:
+- When the backend starts
+- Every 6 hours automatically
+- When manually triggered via API
 
 ## Contributing
 
+Contributions are welcome! If you'd like to add support for more platforms or improve the existing ones, please:
+
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Create a feature branch
+3. Submit a pull request
 
 ## License
 
-This project is licensed under the ISC License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Disclaimer
 
-This website provides information for educational purposes only and is not intended as investment advice. Always do your own research before making any investment decisions.
-
-## Contact
-
-If you have any questions or suggestions, please feel free to open an issue or contact us directly.
+This tool is for informational purposes only. Always verify rates and terms directly with the exchanges before making investment decisions.
