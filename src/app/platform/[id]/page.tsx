@@ -1,9 +1,42 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { PlatformData, StakingOffer, Campaign } from '../../../lib/types';
-import { apiService } from '../../../lib/api';
 import Link from 'next/link';
+import { apiService } from '../../../lib/api';
+
+// Define local types to avoid import issues
+interface StakingOffer {
+  coin: string;
+  symbol: string;
+  apy: string;
+  lockupPeriod: string;
+  minStaking: string;
+  features: string[];
+  lastUpdated: string;
+  apyTrend: number[];
+  dayChange: string;
+  rating: number;
+  fees: string;
+  logoUrl?: string;
+}
+
+interface Campaign {
+  name: string;
+  description: string;
+  expiryDate: string;
+  requirements: string[];
+  reward: string;
+  lastUpdated: string;
+}
+
+interface PlatformData {
+  platform: string;
+  website: string;
+  stakingOffers: StakingOffer[];
+  campaigns: Campaign[];
+  lastUpdated: string;
+  logoUrl?: string;
+}
 
 interface PlatformPageProps {
   params: {

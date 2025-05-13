@@ -1,13 +1,7 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/next"
-    }
-  ],
-  "env": {
-    "NEXT_PUBLIC_API_BASE_URL": "https://crypto-rewards-api.herokuapp.com/api"
-  },
-  "installCommand": "npm install --force --production=false"
+  "buildCommand": "npm install --force --production=false && next build",
+  "installCommand": "npm install --production=false",
+  "framework": "nextjs",
+  "outputDirectory": ".next"
 } 

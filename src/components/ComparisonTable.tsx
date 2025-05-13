@@ -3,9 +3,36 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { StakingOffer, PlatformData, AssetCategory, ChainType } from '../lib/types';
 import ApySparkline from './charts/ApySparkline';
 import StarRating from './ui/StarRating';
+
+// Define types locally to avoid import issues
+type AssetCategory = 'Proof-of-Stake' | 'DeFi LP' | 'Liquid Staking' | 'All';
+type ChainType = 'Ethereum' | 'BNB Smart Chain' | 'Solana' | 'Avalanche' | 'All';
+
+interface StakingOffer {
+  coin: string;
+  symbol: string;
+  apy: string;
+  lockupPeriod: string;
+  minStaking: string;
+  features: string[];
+  lastUpdated: string;
+  apyTrend: number[];
+  dayChange: string;
+  rating: number;
+  fees: string;
+  logoUrl?: string;
+}
+
+interface PlatformData {
+  platform: string;
+  website: string;
+  stakingOffers: StakingOffer[];
+  campaigns: any[];
+  lastUpdated: string;
+  logoUrl?: string;
+}
 
 interface ComparisonTableProps {
   data: PlatformData[];
