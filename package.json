@@ -4,7 +4,7 @@
   "description": "A website to compare staking, campaign, and other rewards offered by crypto exchanges and DeFi programs available in Turkey.",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm install --force && next build",
     "start": "next start",
     "lint": "next lint",
     "backend": "python backend/app.py",
@@ -29,6 +29,7 @@
     "next": "^14.0.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-sparklines": "^1.7.0",
     "typescript": "^5.3.3"
   },
   "devDependencies": {
