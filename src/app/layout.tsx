@@ -1,7 +1,14 @@
 import React from 'react';
 import '../styles/globals.css';
 import type { Metadata } from 'next';
-import { Navbar, Footer, ThemeProvider } from '../components/layout';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+import dynamic from 'next/dynamic';
+
+// Dynamically import ThemeProvider with SSR disabled
+const ThemeProvider = dynamic(() => import('../components/layout/ThemeProvider').then(mod => mod.default), {
+  ssr: false,
+});
 
 export const metadata: Metadata = {
   title: 'Crypto Rewards Comparison - Turkey',

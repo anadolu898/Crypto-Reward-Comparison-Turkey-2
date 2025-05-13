@@ -7,6 +7,7 @@ import logging
 from bs4 import BeautifulSoup
 import re
 import random
+from utils import safe_request, with_fallback
 
 class BtcTurkScraper:
     """Scraper for BtcTurk exchange staking rewards and campaigns"""
@@ -50,237 +51,227 @@ class BtcTurkScraper:
         # Ensure logs directory exists
         os.makedirs(self.logs_dir, exist_ok=True)
     
+    @with_fallback(lambda self: self._get_fallback_staking_data())
     def fetch_staking_data(self):
         """Fetch staking data from BtcTurk"""
-        try:
-            self.logger.info("Fetching staking data from BtcTurk...")
+        self.logger.info("Fetching staking data from BtcTurk...")
+        
+        # Make request to the staking page with improved error handling
+        response, error = safe_request(self.staking_url, headers=self.headers)
+        
+        if error:
+            self.logger.error(f"Error fetching BtcTurk staking data: {error}")
+            return None
             
-            # Make request to the staking page with SSL verification disabled
-            response = requests.get(
-                self.staking_url, 
-                headers=self.headers, 
-                timeout=30,
-                verify=False  # Disable SSL verification for troubleshooting
-            )
+        if not response or response.status_code != 200:
+            self.logger.error(f"Failed to fetch staking page: {response.status_code if response else 'No response'}")
+            return None
+        
+        # Parse the HTML content
+        soup = BeautifulSoup(response.text, 'html.parser')
+        
+        # Try to extract the staking offers from the page
+        staking_data = []
+        
+        # Look for staking cards or containers
+        staking_cards = soup.select('.staking-card, .staking-container, .coin-card')
+        
+        if not staking_cards:
+            # Try alternative selectors if the specific ones don't work
+            staking_cards = soup.select('.card, .product-card, .coin-item')
+        
+        # If we still can't find staking data, look for a data object in the JavaScript
+        if not staking_cards:
+            # Look for data in JavaScript objects
+            scripts = soup.find_all('script')
+            for script in scripts:
+                if script.string and ('stakingOffers' in script.string or 'staking' in script.string):
+                    # Extract the data using regex
+                    matches = re.findall(r'stakingData\s*=\s*(\[.*?\]);', script.string, re.DOTALL)
+                    if matches:
+                        try:
+                            data = json.loads(matches[0])
+                            for item in data:
+                                offer = self._process_staking_item(item)
+                                if offer:
+                                    staking_data.append(offer)
+                        except Exception as e:
+                            self.logger.error(f"Error parsing JavaScript data: {e}")
+        
+        # If we found staking cards, process them
+        if staking_cards:
+            for card in staking_cards:
+                try:
+                    # Extract coin name
+                    coin_elem = card.select_one('.coin-name, .asset-name, .currency-name, h3, .title')
+                    if not coin_elem:
+                        continue
+                    
+                    coin_name = coin_elem.text.strip()
+                    # Extract the coin symbol (usually in parentheses)
+                    symbol_match = re.search(r'\(([A-Z]+)\)', coin_name)
+                    symbol = symbol_match.group(1) if symbol_match else coin_name
+                    # Clean the coin name if it has a symbol in parentheses
+                    coin = re.sub(r'\s*\([A-Z]+\)', '', coin_name).strip()
+                    
+                    # Extract APY
+                    apy_elem = card.select_one('.apy, .apy-value, .apy-rate, .rate, .interest-rate')
+                    apy = '0.0'
+                    if apy_elem:
+                        apy_text = apy_elem.text.strip()
+                        apy_match = re.search(r'([\d.,]+)\s*%', apy_text)
+                        if apy_match:
+                            apy = apy_match.group(1).replace(',', '.')
+                    
+                    # Extract lockup period
+                    lockup_elem = card.select_one('.lockup, .period, .duration, .lock-period')
+                    lockup_period = '0'
+                    if lockup_elem:
+                        lockup_text = lockup_elem.text.strip()
+                        lockup_match = re.search(r'(\d+)\s*(gün|day)', lockup_text, re.IGNORECASE)
+                        if lockup_match:
+                            lockup_period = lockup_match.group(1)
+                    
+                    # Extract minimum staking amount
+                    min_elem = card.select_one('.minimum, .min-amount, .min-stake')
+                    min_staking = '0'
+                    if min_elem:
+                        min_text = min_elem.text.strip()
+                        min_match = re.search(r'([\d.,]+)\s*([A-Z]+)', min_text)
+                        if min_match:
+                            amount = min_match.group(1).replace(',', '.')
+                            currency = min_match.group(2)
+                            min_staking = f"{amount} {currency}"
+                    
+                    # Extract features
+                    features = []
+                    feature_elems = card.select('.feature, .tag, .badge, .label')
+                    for elem in feature_elems:
+                        feature_text = elem.text.strip()
+                        if feature_text and len(feature_text) > 1:  # Avoid empty or single-char features
+                            features.append(feature_text)
+                    
+                    # Create the staking offer
+                    offer = {
+                        "coin": coin,
+                        "symbol": symbol,
+                        "apy": apy,
+                        "lockupPeriod": lockup_period,
+                        "minStaking": min_staking if min_staking != '0' else f"0.01 {symbol}",
+                        "features": features if features else ["Flexible"],
+                        "lastUpdated": datetime.now().isoformat(),
+                        "apyTrend": self._generate_apy_trend(float(apy)),
+                        "dayChange": self._calculate_random_day_change(),
+                        "rating": round(4.0 + (float(apy) / 20), 1),  # Generate a rating based on APY
+                        "fees": "0%"  # Default fee
+                    }
+                    
+                    staking_data.append(offer)
+                except Exception as e:
+                    self.logger.error(f"Error processing staking card: {e}")
+        
+        # If we couldn't extract any data, return None (will trigger fallback)
+        if not staking_data:
+            self.logger.warning("No staking data found on the page")
+            return None
             
-            if response.status_code != 200:
-                self.logger.error(f"Failed to fetch staking page: {response.status_code}")
-                return self._get_fallback_staking_data()
-            
-            # Parse the HTML content
-            soup = BeautifulSoup(response.text, 'html.parser')
-            
-            # Try to extract the staking offers from the page
-            staking_data = []
-            
-            # Look for staking cards or containers
-            staking_cards = soup.select('.staking-card, .staking-container, .coin-card')
-            
-            if not staking_cards:
-                # Try alternative selectors if the specific ones don't work
-                staking_cards = soup.select('.card, .product-card, .coin-item')
-            
-            # If we still can't find staking data, look for a data object in the JavaScript
-            if not staking_cards:
-                # Look for data in JavaScript objects
-                scripts = soup.find_all('script')
-                for script in scripts:
-                    if script.string and ('stakingOffers' in script.string or 'staking' in script.string):
-                        # Extract the data using regex
-                        matches = re.findall(r'stakingData\s*=\s*(\[.*?\]);', script.string, re.DOTALL)
-                        if matches:
-                            try:
-                                data = json.loads(matches[0])
-                                for item in data:
-                                    offer = self._process_staking_item(item)
-                                    if offer:
-                                        staking_data.append(offer)
-                            except Exception as e:
-                                self.logger.error(f"Error parsing JavaScript data: {e}")
-            
-            # If we found staking cards, process them
-            if staking_cards:
-                for card in staking_cards:
-                    try:
-                        # Extract coin name
-                        coin_elem = card.select_one('.coin-name, .asset-name, .currency-name, h3, .title')
-                        if not coin_elem:
-                            continue
-                        
-                        coin_name = coin_elem.text.strip()
-                        # Extract the coin symbol (usually in parentheses)
-                        symbol_match = re.search(r'\(([A-Z]+)\)', coin_name)
-                        symbol = symbol_match.group(1) if symbol_match else coin_name
-                        # Clean the coin name if it has a symbol in parentheses
-                        coin = re.sub(r'\s*\([A-Z]+\)', '', coin_name).strip()
-                        
-                        # Extract APY
-                        apy_elem = card.select_one('.apy, .apy-value, .apy-rate, .rate, .interest-rate')
-                        apy = '0.0'
-                        if apy_elem:
-                            apy_text = apy_elem.text.strip()
-                            apy_match = re.search(r'([\d.,]+)\s*%', apy_text)
-                            if apy_match:
-                                apy = apy_match.group(1).replace(',', '.')
-                        
-                        # Extract lockup period
-                        lockup_elem = card.select_one('.lockup, .period, .duration, .lock-period')
-                        lockup_period = '0'
-                        if lockup_elem:
-                            lockup_text = lockup_elem.text.strip()
-                            lockup_match = re.search(r'(\d+)\s*(gün|day)', lockup_text, re.IGNORECASE)
-                            if lockup_match:
-                                lockup_period = lockup_match.group(1)
-                        
-                        # Extract minimum staking amount
-                        min_elem = card.select_one('.minimum, .min-amount, .min-stake')
-                        min_staking = '0'
-                        if min_elem:
-                            min_text = min_elem.text.strip()
-                            min_match = re.search(r'([\d.,]+)\s*([A-Z]+)', min_text)
-                            if min_match:
-                                amount = min_match.group(1).replace(',', '.')
-                                currency = min_match.group(2)
-                                min_staking = f"{amount} {currency}"
-                        
-                        # Extract features
-                        features = []
-                        feature_elems = card.select('.feature, .tag, .badge, .label')
-                        for elem in feature_elems:
-                            feature_text = elem.text.strip()
-                            if feature_text and len(feature_text) > 1:  # Avoid empty or single-char features
-                                features.append(feature_text)
-                        
-                        # Create the staking offer
-                        offer = {
-                            "coin": coin,
-                            "symbol": symbol,
-                            "apy": apy,
-                            "lockupPeriod": lockup_period,
-                            "minStaking": min_staking if min_staking != '0' else f"0.01 {symbol}",
-                            "features": features if features else ["Flexible"],
-                            "lastUpdated": datetime.now().isoformat(),
-                            "apyTrend": self._generate_apy_trend(float(apy)),
-                            "dayChange": self._calculate_random_day_change(),
-                            "rating": round(4.0 + (float(apy) / 20), 1),  # Generate a rating based on APY
-                            "fees": "0%"  # Default fee
-                        }
-                        
-                        staking_data.append(offer)
-                    except Exception as e:
-                        self.logger.error(f"Error processing staking card: {e}")
-            
-            # If we couldn't extract any data, use fallback data
-            if not staking_data:
-                self.logger.warning("No staking data found on the page, using fallback data")
-                return self._get_fallback_staking_data()
-                
-            self.logger.info(f"Successfully fetched staking data from BtcTurk, found {len(staking_data)} offers")
-            return staking_data
-            
-        except Exception as e:
-            self.logger.error(f"Error fetching BtcTurk staking data: {str(e)}")
-            return self._get_fallback_staking_data()
+        self.logger.info(f"Successfully fetched staking data from BtcTurk, found {len(staking_data)} offers")
+        return staking_data
     
+    @with_fallback(lambda self: self._get_fallback_campaign_data())
     def fetch_campaign_data(self):
         """Fetch campaign data from BtcTurk"""
-        try:
-            self.logger.info("Fetching campaign data from BtcTurk...")
+        self.logger.info("Fetching campaign data from BtcTurk...")
+        
+        # Make request to the campaigns page with improved error handling
+        response, error = safe_request(self.campaigns_url, headers=self.headers)
+        
+        if error:
+            self.logger.error(f"Error fetching BtcTurk campaign data: {error}")
+            return None
             
-            # Make request to the campaigns page with SSL verification disabled
-            response = requests.get(
-                self.campaigns_url, 
-                headers=self.headers, 
-                timeout=30,
-                verify=False  # Disable SSL verification for troubleshooting
-            )
+        if not response or response.status_code != 200:
+            self.logger.error(f"Failed to fetch campaigns page: {response.status_code if response else 'No response'}")
+            return None
+        
+        # Parse the HTML content
+        soup = BeautifulSoup(response.text, 'html.parser')
+        
+        # Try to extract the campaign offers from the page
+        campaign_data = []
+        
+        # Look for campaign cards or containers
+        campaign_cards = soup.select('.campaign-card, .promotion-card, .promo-container, .campaign-container')
+        
+        if not campaign_cards:
+            # Try alternative selectors if the specific ones don't work
+            campaign_cards = soup.select('.card, .promotion, .promo, article')
+        
+        # If we found campaign cards, process them
+        if campaign_cards:
+            for card in campaign_cards:
+                try:
+                    # Extract campaign name
+                    name_elem = card.select_one('h2, h3, .title, .campaign-title, .promo-title')
+                    if not name_elem:
+                        continue
+                    
+                    name = name_elem.text.strip()
+                    
+                    # Extract description
+                    desc_elem = card.select_one('p, .description, .content, .campaign-description')
+                    description = desc_elem.text.strip() if desc_elem else ""
+                    
+                    # Extract expiry date
+                    expiry_elem = card.select_one('.expiry, .deadline, .end-date, .date')
+                    expiry_date = "Ongoing"
+                    if expiry_elem:
+                        expiry_text = expiry_elem.text.strip()
+                        date_match = re.search(r'(\d{1,2})[./](\d{1,2})[./](\d{2,4})', expiry_text)
+                        if date_match:
+                            day, month, year = date_match.groups()
+                            year = f"20{year}" if len(year) == 2 else year
+                            expiry_date = f"{year}-{month.zfill(2)}-{day.zfill(2)}"
+                    
+                    # Extract requirements
+                    requirements = []
+                    req_elems = card.select('.requirement, .condition, .criteria, li')
+                    for elem in req_elems:
+                        req_text = elem.text.strip()
+                        if req_text and "campaign" not in req_text.lower() and "promotion" not in req_text.lower():
+                            requirements.append(req_text)
+                    
+                    # If no specific requirements found, add a default one
+                    if not requirements:
+                        requirements = ["Verified Account"]
+                    
+                    # Extract reward
+                    reward_elem = card.select_one('.reward, .prize, .bonus')
+                    reward = "Bonus Rewards"
+                    if reward_elem:
+                        reward = reward_elem.text.strip()
+                    
+                    # Create the campaign offer
+                    offer = {
+                        "name": name,
+                        "description": description,
+                        "expiryDate": expiry_date,
+                        "requirements": requirements,
+                        "reward": reward,
+                        "lastUpdated": datetime.now().isoformat()
+                    }
+                    
+                    campaign_data.append(offer)
+                except Exception as e:
+                    self.logger.error(f"Error processing campaign card: {e}")
+        
+        # If we couldn't extract any data, return None (will trigger fallback)
+        if not campaign_data:
+            self.logger.warning("No campaign data found on the page")
+            return None
             
-            if response.status_code != 200:
-                self.logger.error(f"Failed to fetch campaigns page: {response.status_code}")
-                return self._get_fallback_campaign_data()
-            
-            # Parse the HTML content
-            soup = BeautifulSoup(response.text, 'html.parser')
-            
-            # Try to extract the campaign offers from the page
-            campaign_data = []
-            
-            # Look for campaign cards or containers
-            campaign_cards = soup.select('.campaign-card, .promotion-card, .promo-container, .campaign-container')
-            
-            if not campaign_cards:
-                # Try alternative selectors if the specific ones don't work
-                campaign_cards = soup.select('.card, .promotion, .promo, article')
-            
-            # If we found campaign cards, process them
-            if campaign_cards:
-                for card in campaign_cards:
-                    try:
-                        # Extract campaign name
-                        name_elem = card.select_one('h2, h3, .title, .campaign-title, .promo-title')
-                        if not name_elem:
-                            continue
-                        
-                        name = name_elem.text.strip()
-                        
-                        # Extract description
-                        desc_elem = card.select_one('p, .description, .content, .campaign-description')
-                        description = desc_elem.text.strip() if desc_elem else ""
-                        
-                        # Extract expiry date
-                        expiry_elem = card.select_one('.expiry, .deadline, .end-date, .date')
-                        expiry_date = "Ongoing"
-                        if expiry_elem:
-                            expiry_text = expiry_elem.text.strip()
-                            date_match = re.search(r'(\d{1,2})[./](\d{1,2})[./](\d{2,4})', expiry_text)
-                            if date_match:
-                                day, month, year = date_match.groups()
-                                year = f"20{year}" if len(year) == 2 else year
-                                expiry_date = f"{year}-{month.zfill(2)}-{day.zfill(2)}"
-                        
-                        # Extract requirements
-                        requirements = []
-                        req_elems = card.select('.requirement, .condition, .criteria, li')
-                        for elem in req_elems:
-                            req_text = elem.text.strip()
-                            if req_text and "campaign" not in req_text.lower() and "promotion" not in req_text.lower():
-                                requirements.append(req_text)
-                        
-                        # If no specific requirements found, add a default one
-                        if not requirements:
-                            requirements = ["Verified Account"]
-                        
-                        # Extract reward
-                        reward_elem = card.select_one('.reward, .prize, .bonus')
-                        reward = "Bonus Rewards"
-                        if reward_elem:
-                            reward = reward_elem.text.strip()
-                        
-                        # Create the campaign offer
-                        offer = {
-                            "name": name,
-                            "description": description,
-                            "expiryDate": expiry_date,
-                            "requirements": requirements,
-                            "reward": reward,
-                            "lastUpdated": datetime.now().isoformat()
-                        }
-                        
-                        campaign_data.append(offer)
-                    except Exception as e:
-                        self.logger.error(f"Error processing campaign card: {e}")
-            
-            # If we couldn't extract any data, use fallback data
-            if not campaign_data:
-                self.logger.warning("No campaign data found on the page, using fallback data")
-                return self._get_fallback_campaign_data()
-                
-            self.logger.info(f"Successfully fetched campaign data from BtcTurk, found {len(campaign_data)} campaigns")
-            return campaign_data
-            
-        except Exception as e:
-            self.logger.error(f"Error fetching BtcTurk campaign data: {str(e)}")
-            return self._get_fallback_campaign_data()
+        self.logger.info(f"Successfully fetched campaign data from BtcTurk, found {len(campaign_data)} campaigns")
+        return campaign_data
     
     def _process_staking_item(self, item):
         """Process a staking item from JavaScript data"""

@@ -84,6 +84,14 @@ const Navbar = () => {
               Haberler
             </Link>
             <Link 
+              href="/faq" 
+              className={`font-medium hover:text-primary transition-colors ${
+                scrolled ? 'text-gray-700 dark:text-gray-300' : 'text-white/90 dark:text-white/90'
+              }`}
+            >
+              SSS
+            </Link>
+            <Link 
               href="/about" 
               className={`font-medium hover:text-primary transition-colors ${
                 scrolled ? 'text-gray-700 dark:text-gray-300' : 'text-white/90 dark:text-white/90'
@@ -169,6 +177,13 @@ const Navbar = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Haberler
+              </Link>
+              <Link 
+                href="/faq" 
+                className="block py-2 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                SSS
               </Link>
               <Link 
                 href="/about" 

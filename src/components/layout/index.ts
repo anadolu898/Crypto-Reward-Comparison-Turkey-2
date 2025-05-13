@@ -1,5 +1,7 @@
-import Navbar from './Navbar';
-import Footer from './Footer';
-import { ThemeProvider, useTheme } from './ThemeProvider';
+import dynamic from 'next/dynamic';
+import type { ComponentType } from 'react';
 
-export { Navbar, Footer, ThemeProvider, useTheme }; 
+const ThemeProviderComponent = dynamic(() => import('./ThemeProvider').then(mod => mod.default), { ssr: false });
+export { ThemeProviderComponent as ThemeProvider };
+export { default as Footer } from '../Footer';
+export { default as Navbar } from '../Navbar';

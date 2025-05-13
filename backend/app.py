@@ -19,6 +19,11 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
+# Set crypto environment for SSL configuration
+# If not set, default to 'development' for SSL warnings suppression
+if 'CRYPTO_ENV' not in os.environ:
+    os.environ['CRYPTO_ENV'] = os.environ.get('FLASK_ENV', 'development')
+
 # Setup data and log directories
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.environ.get('DATA_DIR', os.path.join(BASE_DIR, 'data'))

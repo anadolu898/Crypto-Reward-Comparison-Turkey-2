@@ -178,11 +178,11 @@ export default function ComparisonPage() {
             <div className="hidden md:flex items-center space-x-3">
               <span className="text-sm text-gray-600 dark:text-gray-400">Desteklenen platformlar:</span>
               <div className="flex -space-x-4">
-                <Image src="/btcturk-logo.png" alt="BtcTurk" width={32} height={32} className="h-8 w-8 rounded-full border-2 border-white dark:border-dark" />
-                <Image src="/paribu-logo.png" alt="Paribu" width={32} height={32} className="h-8 w-8 rounded-full border-2 border-white dark:border-dark" />
-                <Image src="/binance-logo.png" alt="Binance" width={32} height={32} className="h-8 w-8 rounded-full border-2 border-white dark:border-dark" />
+                <Image src="/logos/btcturk-logo.svg" alt="BtcTurk" width={32} height={32} className="h-8 w-8 rounded-full border-2 border-white dark:border-dark" />
+                <Image src="/logos/paribu-logo.svg" alt="Paribu" width={32} height={32} className="h-8 w-8 rounded-full border-2 border-white dark:border-dark" />
+                <Image src="/logos/bitexen-logo.svg" alt="Bitexen" width={32} height={32} className="h-8 w-8 rounded-full border-2 border-white dark:border-dark" />
                 <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-sm text-white border-2 border-white dark:border-dark">
-                  +2
+                  +4
                 </div>
               </div>
             </div>
