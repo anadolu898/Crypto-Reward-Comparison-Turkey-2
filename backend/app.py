@@ -6,6 +6,11 @@ from datetime import datetime
 import logging
 from scrapers.btcturk import BtcTurkScraper
 from scrapers.paribu import ParibuScraper
+from scrapers.bitexen import BitexenScraper
+from scrapers.bitci import BitciScraper
+from scrapers.cointr import CoinTRScraper
+from scrapers.icrypex import ICRYPEXScraper
+from scrapers.bitay import BitayScraper
 import threading
 import time
 import schedule
@@ -45,7 +50,12 @@ os.makedirs(LOGS_DIR, exist_ok=True)
 # List of available scrapers
 scrapers = {
     "btcturk": BtcTurkScraper(data_dir=DATA_DIR, logs_dir=LOGS_DIR),
-    "paribu": ParibuScraper(data_dir=DATA_DIR, logs_dir=LOGS_DIR)
+    "paribu": ParibuScraper(data_dir=DATA_DIR, logs_dir=LOGS_DIR),
+    "bitexen": BitexenScraper(data_dir=DATA_DIR, logs_dir=LOGS_DIR),
+    "bitci": BitciScraper(data_dir=DATA_DIR, logs_dir=LOGS_DIR),
+    "cointr": CoinTRScraper(data_dir=DATA_DIR, logs_dir=LOGS_DIR),
+    "icrypex": ICRYPEXScraper(data_dir=DATA_DIR, logs_dir=LOGS_DIR),
+    "bitay": BitayScraper(data_dir=DATA_DIR, logs_dir=LOGS_DIR)
 }
 
 # Route to get data for all platforms
