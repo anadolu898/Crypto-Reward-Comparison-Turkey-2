@@ -48,11 +48,11 @@ export default function Home() {
 
   // Data for platform logos
   const platformLogos = [
-    { src: '/btcturk-logo.png', alt: 'BtcTurk Logo', width: 140, height: 40 },
-    { src: '/paribu-logo.png', alt: 'Paribu Logo', width: 140, height: 40 },
-    { src: '/binance-logo.png', alt: 'Binance Logo', width: 140, height: 40 },
-    { src: '/kucoin-logo.png', alt: 'Kucoin Logo', width: 140, height: 40 },
-    { src: '/trust-logo.png', alt: 'Trust Wallet Logo', width: 140, height: 40 },
+    { src: '/logos/btcturk-logo.svg', alt: 'BtcTurk Logo', width: 150, height: 50 },
+    { src: '/images/exchanges/paribu-logo.svg', alt: 'Paribu Logo', width: 150, height: 50 },
+    { src: '/images/exchanges/binance-logo.svg', alt: 'Binance Logo', width: 150, height: 50 },
+    { src: '/logos/bitci-logo.svg', alt: 'Bitci Logo', width: 150, height: 50 },
+    { src: '/logos/bitexen-logo.svg', alt: 'Bitexen Logo', width: 150, height: 50 },
   ];
 
   // Stats for animated counters
@@ -215,7 +215,7 @@ export default function Home() {
                 </div>
               </AnimationWrapper>
               
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto table-responsive">
                 <table className="w-full text-left">
                   <thead>
                     <tr className="border-b border-gray-200 dark:border-gray-700">

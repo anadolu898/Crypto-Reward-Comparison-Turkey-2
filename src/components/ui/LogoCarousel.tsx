@@ -73,20 +73,46 @@ export default function LogoCarousel({
     return null;
   }
 
-  if (prefersReducedMotion) {
+  // Handle SVG file extensions to use Image component properly
+  const getLogoElement = (logo: Logo, index: number) => {
+    const isSvg = logo.src.toLowerCase().endsWith('.svg');
+    
     return (
-      <div className={`flex flex-wrap justify-center gap-8 ${className}`}>
-        {logos.map((logo, index) => (
-          <div key={index} className={`flex items-center justify-center ${itemClassName}`}>
+      <div
+        key={index}
+        className={`flex items-center justify-center ${itemClassName}`}
+      >
+        {isSvg ? (
+          <div 
+            className="relative opacity-80 hover:opacity-100 transition-opacity duration-300 hover:scale-105 transform"
+            style={{ width: logo.width || 140, height: logo.height || 50 }}
+          >
             <Image
               src={logo.src}
               alt={logo.alt}
-              width={logo.width || 120}
-              height={logo.height || 40}
-              className="opacity-70 hover:opacity-100 transition-opacity"
+              fill
+              style={{ objectFit: 'contain' }}
+              priority={index < 5}
             />
           </div>
-        ))}
+        ) : (
+          <Image
+            src={logo.src}
+            alt={logo.alt}
+            width={logo.width || 140}
+            height={logo.height || 50}
+            className="opacity-80 hover:opacity-100 transition-opacity duration-300 hover:scale-105 transform"
+            priority={index < 5}
+          />
+        )}
+      </div>
+    );
+  };
+
+  if (prefersReducedMotion) {
+    return (
+      <div className={`flex flex-wrap justify-center gap-12 ${className}`}>
+        {logos.map((logo, index) => getLogoElement(logo, index))}
       </div>
     );
   }
@@ -106,18 +132,11 @@ export default function LogoCarousel({
         {duplicatedLogos.map((logo, index) => (
           <div
             key={index}
-            className={`flex items-center justify-center mx-8 ${itemClassName}`}
+            className={`flex items-center justify-center mx-12 ${itemClassName}`}
           >
-            <Image
-              src={logo.src}
-              alt={logo.alt}
-              width={logo.width || 120}
-              height={logo.height || 40}
-              className="opacity-70 hover:opacity-100 transition-opacity"
-            />
+            {getLogoElement(logo, index)}
           </div>
         ))}
       </motion.div>
     </div>
   );
-} 

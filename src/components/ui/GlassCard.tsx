@@ -12,20 +12,23 @@ interface GlassCardProps {
   borderGradient?: boolean;
   expandable?: boolean;
   expandedContent?: React.ReactNode;
+  headingId?: string;
 }
 
 export default function GlassCard({
   children,
   className = '',
   hoverEffect = 'lift',
-  backgroundOpacity = 0.2,
+  backgroundOpacity = 0.25,
   borderWidth = 1,
   borderGradient = false,
   expandable = false,
-  expandedContent
+  expandedContent,
+  headingId
 }: GlassCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const uniqueId = headingId || `card-${Math.random().toString(36).substring(2, 9)}`;
 
   const getHoverVariants = () => {
     switch (hoverEffect) {
@@ -53,8 +56,8 @@ export default function GlassCard({
 
   const baseStyle = `
     backdrop-filter backdrop-blur-lg 
-    bg-white/75 dark:bg-dark-card/${backgroundOpacity}
-    rounded-xl p-6 transition-all duration-300
+    bg-white/80 dark:bg-dark-card/${backgroundOpacity}
+    rounded-xl p-6 md:p-7 transition-all duration-300
   `;
 
   const borderStyle = borderGradient
@@ -73,6 +76,13 @@ export default function GlassCard({
     expanded: { opacity: 1, height: 'auto', overflow: 'visible' }
   };
 
+  const cardProps = expandable ? {
+    role: "region",
+    "aria-expanded": isExpanded,
+    "aria-labelledby": uniqueId,
+    onClick: () => setIsExpanded(!isExpanded)
+  } : {};
+
   return (
     <motion.div
       className={`${baseStyle} ${borderWidthClass} ${borderStyle} ${className}`}
@@ -82,14 +92,16 @@ export default function GlassCard({
       transition={{ duration: 0.3, ease: "easeInOut" }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
-      onClick={() => expandable && setIsExpanded(!isExpanded)}
+      {...cardProps}
       style={borderGradient ? {
         backgroundImage: 'linear-gradient(to right, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), linear-gradient(to right, #0CD4B5, #220D53)',
         backgroundOrigin: 'border-box',
         backgroundClip: 'padding-box, border-box'
       } : {}}
     >
-      {children}
+      <div className="space-y-4">
+        {children}
+      </div>
 
       {expandable && expandedContent && (
         <motion.div
@@ -97,19 +109,22 @@ export default function GlassCard({
           animate={isExpanded ? "expanded" : "collapsed"}
           variants={contentVariants}
           transition={{ duration: 0.3 }}
-          className="mt-4"
+          className="mt-6"
+          aria-hidden={!isExpanded}
         >
           {expandedContent}
         </motion.div>
       )}
 
       {expandable && (
-        <div className="flex justify-center mt-2">
+        <div className="flex justify-center mt-4">
           <motion.button
-            className="text-primary focus:outline-none"
+            className="text-primary focus:outline-none p-2 hover:bg-primary/10 rounded-full focus:ring-2 focus:ring-primary/50"
             animate={{ rotate: isExpanded ? 180 : 0 }}
             transition={{ duration: 0.3 }}
             aria-label={isExpanded ? "Collapse" : "Expand"}
+            aria-controls={uniqueId}
+            aria-expanded={isExpanded}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
