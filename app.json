@@ -1,25 +1,32 @@
 {
-  "name": "Crypto Rewards API",
-  "description": "Backend API for the Crypto Rewards Comparison website",
-  "repository": "https://github.com/yourusername/crypto-rewards-comparison-turkey",
-  "keywords": ["python", "flask", "api", "crypto", "staking"],
-  "env": {
-    "API_KEY": {
-      "description": "A secret key for API access",
-      "generator": "secret"
-    },
-    "CORS_ORIGINS": {
-      "description": "Comma-separated list of allowed origins for CORS",
-      "value": "http://localhost:3000,https://crypto-rewards-comparison-turkey.vercel.app"
-    },
-    "UPDATE_INTERVAL_HOURS": {
-      "description": "Hours between automatic data updates",
-      "value": "6"
-    }
-  },
+  "name": "crypto-rewards-api",
+  "description": "Turkish cryptocurrency rewards comparison API",
+  "repository": "https://github.com/anadolu898/Crypto-Reward-Comparison-Turkey-2",
+  "keywords": ["python", "flask", "api", "crypto", "turkey"],
   "buildpacks": [
+    {
+      "url": "https://github.com/timanovsky/subdir-heroku-buildpack.git"
+    },
     {
       "url": "heroku/python"
     }
-  ]
+  ],
+  "env": {
+    "PROJECT_PATH": {
+      "description": "Path to the backend project",
+      "value": "backend"
+    },
+    "API_KEY": {
+      "description": "API key for authentication",
+      "generator": "secret"
+    },
+    "CORS_ORIGINS": {
+      "description": "Allowed CORS origins",
+      "value": "http://localhost:3000,https://crypto-rewards-comparison-turkey-fvfhj1etx.vercel.app"
+    },
+    "UPDATE_INTERVAL_HOURS": {
+      "description": "Interval for updating cryptocurrency data",
+      "value": "6"
+    }
+  }
 } 

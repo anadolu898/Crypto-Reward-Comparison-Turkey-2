@@ -12,14 +12,19 @@ class User(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password_hash = db.Column(db.String(256), nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
     name = db.Column(db.String(100), nullable=True)
-    is_active = db.Column(db.Boolean, default=False)
-    is_premium = db.Column(db.Boolean, default=False)
-    premium_expires_at = db.Column(db.DateTime, nullable=True)
-    email_notifications = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     last_login = db.Column(db.DateTime, nullable=True)
+    is_active = db.Column(db.Boolean, default=False)
+    email_notifications = db.Column(db.Boolean, default=True)
+    
+    # Premium subscription fields
+    is_premium = db.Column(db.Boolean, default=False)
+    premium_since = db.Column(db.DateTime, nullable=True)
+    premium_expires = db.Column(db.DateTime, nullable=True)
+    stripe_customer_id = db.Column(db.String(255), nullable=True)
+    stripe_subscription_id = db.Column(db.String(255), nullable=True)
     
     # Relationship with tokens
     tokens = db.relationship('Token', backref='user', lazy=True, cascade="all, delete-orphan")
@@ -48,16 +53,18 @@ class User(db.Model):
         return token.token
     
     def to_dict(self):
+        """Convert user object to dictionary"""
         return {
             'id': self.id,
             'email': self.email,
             'name': self.name,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'last_login': self.last_login.isoformat() if self.last_login else None,
             'is_active': self.is_active,
-            'is_premium': self.is_premium,
-            'premium_expires_at': self.premium_expires_at.isoformat() if self.premium_expires_at else None,
             'email_notifications': self.email_notifications,
-            'created_at': self.created_at.isoformat(),
-            'last_login': self.last_login.isoformat() if self.last_login else None
+            'is_premium': self.is_premium,
+            'premium_since': self.premium_since.isoformat() if self.premium_since else None,
+            'premium_expires': self.premium_expires.isoformat() if self.premium_expires else None
         }
     
     def __repr__(self):

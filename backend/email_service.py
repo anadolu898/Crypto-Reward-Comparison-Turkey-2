@@ -184,11 +184,14 @@ def send_welcome_email(user):
         
         user_name = user.name if user.name else "Değerli Kullanıcımız"
         
+        sender = current_app.config.get('MAIL_DEFAULT_SENDER', 'info@rightbehind.app')
+        logger.info(f"Attempting to send welcome email from {sender} to {user.email}")
+        
         msg = Message(
             subject="Crypto Rewards Türkiye - Hoş Geldiniz!",
             recipients=[user.email],
             html=render_template_string(WELCOME_TEMPLATE, user_name=user_name, login_url=login_url),
-            sender=current_app.config.get('MAIL_DEFAULT_SENDER', 'info@rightbehind.app')
+            sender=sender
         )
         
         mail.send(msg)
@@ -196,6 +199,11 @@ def send_welcome_email(user):
         return True
     except Exception as e:
         logger.error(f"Failed to send welcome email to {user.email}: {str(e)}")
+        # Log mail configuration
+        logger.error(f"Mail config: SERVER={current_app.config.get('MAIL_SERVER')}, "
+                    f"PORT={current_app.config.get('MAIL_PORT')}, "
+                    f"USERNAME={current_app.config.get('MAIL_USERNAME')}, "
+                    f"DEFAULT_SENDER={current_app.config.get('MAIL_DEFAULT_SENDER')}")
         return False
 
 def send_password_reset_email(user, token):

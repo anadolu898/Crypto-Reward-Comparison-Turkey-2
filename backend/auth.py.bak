@@ -74,124 +74,73 @@ def get_current_user():
         return None
 
 # Routes
-# EMERGENCY FIX: Simplified register function
 @auth_bp.route('/register', methods=['POST'])
 @limiter.limit("10 per hour")
 def register():
-    """Register a new user - EMERGENCY SIMPLIFIED VERSION"""
+    """Register a new user"""
     try:
         data = request.get_json()
         
         if not data:
-            return jsonify({"error": "Invalid data"}), 400
+            return jsonify({"error": "Geçersiz veri gönderildi"}), 400
         
-        # Extract data
+        # Extract and validate data
         email = data.get('email', '').lower().strip()
         password = data.get('password', '')
+        confirm_password = data.get('confirmPassword', '')
         name = data.get('name', '').strip()
         
-        # Basic validation
-        if not email or not password:
-            return jsonify({"error": "Email and password are required"}), 400
+        # Email validation
+        is_valid_email, email_error = validate_email(email)
+        if not is_valid_email:
+            return jsonify({"error": email_error}), 400
         
         # Check if email already exists
         if User.query.filter_by(email=email).first():
-            return jsonify({"error": "This email is already in use"}), 400
+            return jsonify({"error": "Bu e-posta adresi zaten kullanılıyor"}), 400
         
-        # Create user (always active)
+        # Password validation
+        if password != confirm_password:
+            return jsonify({"error": "Şifreler eşleşmiyor"}), 400
+        
+        is_valid_password, password_error = validate_password(password)
+        if not is_valid_password:
+            return jsonify({"error": password_error}), 400
+        
+        # Create new user
+        user = User(email=email, name=name)
+        user.password = password  # This will hash the password
+        
+        # Auto-activate all accounts for now
+        user.is_active = True
+        logger.info(f"Auto-activating user {email}")
+        
+        db.session.add(user)
+        db.session.commit()
+        
+        # Send welcome email for auto-activated accounts
         try:
-            user = User(email=email, name=name)
-            user.password = password  # This will hash the password
-            user.is_active = True
-            
-            db.session.add(user)
-            db.session.commit()
-            
-            # Log success but don't try to send email
-            logger.info(f"User registered successfully: {email}")
-            
-            # Return success
-            return jsonify({
-                "message": "Registration successful! Your account is active.",
-                "email": email,
-                "success": True
-            }), 201
-            
+            email_sent = send_welcome_email(user)
+            if email_sent:
+                logger.info(f"Welcome email sent to {email}")
+            else:
+                logger.warning(f"Failed to send welcome email to {email}, but account was created successfully")
         except Exception as e:
-            db.session.rollback()
-            logger.error(f"Database error: {str(e)}")
-            return jsonify({"error": "Failed to create account due to database error"}), 500
-    
+            logger.error(f"Failed to send welcome email: {str(e)}")
+            # Don't let email errors affect registration
+        
+        # Return success message
+        return jsonify({
+            "message": "Kayıt başarılı! Hesabınız aktif edildi.",
+            "email": email,
+            "auto_activated": True
+        }), 201
+        
     except Exception as e:
         logger.error(f"Registration error: {str(e)}")
-        return jsonify({"error": "Registration failed due to server error"}), 500
-# EMERGENCY FIX - Original register function commented out
-# @auth_bp.route('/register', methods=['POST'])
-# @limiter.limit("10 per hour")
-#     """Register a new user"""
-#     try:
-#         data = request.get_json()
-#         
-#         if not data:
-#             return jsonify({"error": "Geçersiz veri gönderildi"}), 400
-#         
-#         # Extract and validate data
-#         email = data.get('email', '').lower().strip()
-#         password = data.get('password', '')
-#         confirm_password = data.get('confirmPassword', '')
-#         name = data.get('name', '').strip()
-#         
-#         # Email validation
-#         is_valid_email, email_error = validate_email(email)
-#         if not is_valid_email:
-#             return jsonify({"error": email_error}), 400
-#         
-#         # Check if email already exists
-#         if User.query.filter_by(email=email).first():
-#             return jsonify({"error": "Bu e-posta adresi zaten kullanılıyor"}), 400
-#         
-#         # Password validation
-#         if password != confirm_password:
-#             return jsonify({"error": "Şifreler eşleşmiyor"}), 400
-#         
-#         is_valid_password, password_error = validate_password(password)
-#         if not is_valid_password:
-#             return jsonify({"error": password_error}), 400
-#         
-#         # Create new user
-#         user = User(email=email, name=name)
-#         user.password = password  # This will hash the password
-#         
-#         # Auto-activate all accounts for now
-#         user.is_active = True
-#         logger.info(f"Auto-activating user {email}")
-#         
-#         db.session.add(user)
-#         db.session.commit()
-#         
-#         # Send welcome email for auto-activated accounts
-#         try:
-#             email_sent = send_welcome_email(user)
-#             if email_sent:
-#                 logger.info(f"Welcome email sent to {email}")
-#             else:
-#                 logger.warning(f"Failed to send welcome email to {email}, but account was created successfully")
-#         except Exception as e:
-#             logger.error(f"Failed to send welcome email: {str(e)}")
-#             # Don't let email errors affect registration
-#         
-#         # Return success message
-#         return jsonify({
-#             "message": "Kayıt başarılı! Hesabınız aktif edildi.",
-#             "email": email,
-#             "auto_activated": True
-#         }), 201
-#         
-#     except Exception as e:
-#         logger.error(f"Registration error: {str(e)}")
-#         db.session.rollback()
-#         return jsonify({"error": "Kayıt işlemi sırasında bir hata oluştu"}), 500
-# 
+        db.session.rollback()
+        return jsonify({"error": "Kayıt işlemi sırasında bir hata oluştu"}), 500
+
 @auth_bp.route('/login', methods=['POST'])
 @limiter.limit("20 per hour")
 def login():

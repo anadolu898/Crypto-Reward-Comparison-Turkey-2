@@ -20,6 +20,7 @@ from dotenv import load_dotenv
 from flask_jwt_extended import JWTManager
 from email_service import mail, init_app as init_email
 from auth import init_app as init_auth
+from payment_service import init_app as init_payment
 from migrations import init_db
 
 # Load environment variables
@@ -81,6 +82,7 @@ os.makedirs(LOGS_DIR, exist_ok=True)
 init_db(app)
 init_email(app)
 init_auth(app)
+init_payment(app)
 
 # List of available scrapers
 scrapers = {

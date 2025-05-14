@@ -94,7 +94,7 @@ export default function RegisterPage() {
                     Hesabınız aktif edildi ve kullanıma hazır.
                   </p>
                   <p className="text-green-700 dark:text-green-300 mb-2">
-                    Kayıt sırasında belirttiğiniz e-posta adresine bir hoş geldin e-postası gönderildi.
+                    Kayıt sırasında belirttiğiniz e-posta adresine bir hoş geldin e-postası gönderilmiş olabilir.
                   </p>
                   <p className="text-green-700 dark:text-green-300 font-medium mt-4">
                     Giriş sayfasına yönlendiriliyorsunuz...
