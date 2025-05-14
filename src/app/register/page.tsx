@@ -47,10 +47,18 @@ export default function RegisterPage() {
       setSuccess(true);
       setLoading(false);
       
-      // Redirect to verification page after a delay
-      setTimeout(() => {
-        router.push(`/verify-email?email=${encodeURIComponent(formData.email)}`);
-      }, 1500);
+      // Check if auto-activated (in development mode)
+      if (response.data.auto_activated) {
+        // Redirect to login page if auto-activated
+        setTimeout(() => {
+          router.push('/login');
+        }, 1500);
+      } else {
+        // Redirect to verification page if not auto-activated
+        setTimeout(() => {
+          router.push(`/verify-email?email=${encodeURIComponent(formData.email)}`);
+        }, 1500);
+      }
       
     } catch (error: any) {
       setLoading(false);
@@ -76,7 +84,7 @@ export default function RegisterPage() {
           {success ? (
             <div className="bg-green-50 dark:bg-green-900 p-4 rounded-lg mb-6 text-center">
               <p className="text-green-800 dark:text-green-200">
-                Kayıt başarılı! E-posta adresinize doğrulama bağlantısı gönderildi.
+                Kayıt başarılı! {process.env.NODE_ENV === 'development' ? 'Giriş sayfasına yönlendiriliyorsunuz.' : 'E-posta adresinize doğrulama bağlantısı gönderildi.'}
               </p>
             </div>
           ) : (
