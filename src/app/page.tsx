@@ -201,7 +201,7 @@ export default function Home() {
             >
               <AnimationWrapper animation="fadeIn" delay={0.6}>
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold dark:text-white">En İyi Staking Varlıkları</h2>
+                  <h2 className="text-2xl font-bold">En İyi Staking Varlıkları</h2>
                   <div className="flex items-center space-x-4">
                     <span className="text-sm text-primary">
                       <CounterAnimation
@@ -218,7 +218,7 @@ export default function Home() {
               <div className="overflow-x-auto table-responsive">
                 <table className="w-full text-left">
                   <thead>
-                    <tr className="border-b border-gray-200 dark:border-gray-700">
+                    <tr className="border-b border-gray-200">
                       <th className="pb-3">#</th>
                       <th className="pb-3">Kripto</th>
                       <th className="pb-3">Ödül Oranı</th>
@@ -229,7 +229,7 @@ export default function Home() {
                     {cryptoAssets.map((asset, index) => (
                       <motion.tr 
                         key={asset.id} 
-                        className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-dark/50"
+                        className="border-b border-gray-100 hover:bg-gray-50"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.8 + (index * 0.1) }}
@@ -269,11 +269,11 @@ export default function Home() {
       </section>
 
       {/* Features Section with Animated Cards */}
-      <section className="py-20 bg-light dark:bg-dark relative overflow-hidden">
+      <section className="py-20 bg-light relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
         <div className="container relative z-10">
           <AnimationWrapper animation="fadeIn">
-            <h2 className="section-title dark:text-white">
+            <h2 className="section-title">
               <span className="gradient-text">Neden</span> Bizi Tercih Etmelisiniz?
             </h2>
           </AnimationWrapper>
@@ -290,8 +290,8 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold mb-3 dark:text-white">Güncel Veri</h3>
-                <p className="text-gray-600 dark:text-gray-300">En güncel staking oranları, minimum yatırım miktarları ve daha fazlası.</p>
+                <h3 className="text-xl font-semibold mb-3">Güncel Veri</h3>
+                <p className="text-gray-600">En güncel staking oranları, minimum yatırım miktarları ve daha fazlası.</p>
               </GlassCard>
 
               <GlassCard hoverEffect="lift" className="h-full">
@@ -300,8 +300,8 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold mb-3 dark:text-white">Detaylı Karşılaştırma</h3>
-                <p className="text-gray-600 dark:text-gray-300">Farklı platformlar arasında en iyi staking fırsatlarını kolayca karşılaştırın.</p>
+                <h3 className="text-xl font-semibold mb-3">Detaylı Karşılaştırma</h3>
+                <p className="text-gray-600">Farklı platformlar arasında en iyi staking fırsatlarını kolayca karşılaştırın.</p>
               </GlassCard>
 
               <GlassCard hoverEffect="lift" className="h-full">
@@ -310,8 +310,8 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold mb-3 dark:text-white">Premium Özellikler</h3>
-                <p className="text-gray-600 dark:text-gray-300">Gerçek zamanlı uyarılar, gelişmiş filtreleme ve daha fazlası için premium üyelik.</p>
+                <h3 className="text-xl font-semibold mb-3">Premium Özellikler</h3>
+                <p className="text-gray-600">Gerçek zamanlı uyarılar, gelişmiş filtreleme ve daha fazlası için premium üyelik.</p>
               </GlassCard>
             </StaggeredAnimationWrapper>
           </div>
@@ -319,7 +319,7 @@ export default function Home() {
       </section>
 
       {/* Featured Platforms Section with Animated Cards */}
-      <section className="py-20 bg-white dark:bg-dark relative overflow-hidden">
+      <section className="py-20 bg-white relative overflow-hidden">
         <AnimatedGradient 
           className="absolute inset-0" 
           colors={['rgba(12, 212, 181, 0.03)', 'rgba(34, 13, 83, 0.05)', 'rgba(12, 212, 181, 0.03)']}
@@ -330,7 +330,7 @@ export default function Home() {
         
         <div className="container relative z-10">
           <AnimationWrapper animation="fadeIn">
-            <h2 className="section-title dark:text-white">Öne Çıkan Platformlar</h2>
+            <h2 className="section-title">Öne Çıkan Platformlar</h2>
           </AnimationWrapper>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -341,24 +341,24 @@ export default function Home() {
                     <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center mb-2">
                       <span className="text-blue-600 font-bold">BT</span>
                     </div>
-                    <h3 className="text-xl font-semibold dark:text-white">BtcTurk</h3>
+                    <h3 className="text-xl font-semibold">BtcTurk</h3>
                   </div>
-                  <div className="bg-green-100 text-green-800 text-sm font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 animated-border-gradient">
+                  <div className="bg-green-100 text-green-800 text-sm font-medium px-2.5 py-0.5 rounded">
                     En Yüksek APY
                   </div>
                 </div>
                 <div className="space-y-3 mb-6">
                   <div className="flex justify-between">
-                    <span className="text-gray-500 dark:text-gray-400">USDT Staking</span>
+                    <span className="text-gray-500">USDT Staking</span>
                     <span className="font-semibold text-accent">%8 APY</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500 dark:text-gray-400">BTC Staking</span>
+                    <span className="text-gray-500">BTC Staking</span>
                     <span className="font-semibold text-accent">%4.5 APY</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500 dark:text-gray-400">Minimum Miktar</span>
-                    <span className="font-semibold dark:text-white">100 USDT</span>
+                    <span className="text-gray-500">Minimum Miktar</span>
+                    <span className="font-semibold">100 USDT</span>
                   </div>
                 </div>
                 <div className="mt-auto">
@@ -381,24 +381,24 @@ export default function Home() {
                     <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center mb-2">
                       <span className="text-purple-600 font-bold">PB</span>
                     </div>
-                    <h3 className="text-xl font-semibold dark:text-white">Paribu</h3>
+                    <h3 className="text-xl font-semibold">Paribu</h3>
                   </div>
-                  <div className="bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 animated-border-gradient">
+                  <div className="bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded">
                     En Çok Tercih Edilen
                   </div>
                 </div>
                 <div className="space-y-3 mb-6">
                   <div className="flex justify-between">
-                    <span className="text-gray-500 dark:text-gray-400">ETH Staking</span>
+                    <span className="text-gray-500">ETH Staking</span>
                     <span className="font-semibold text-accent">%7.5 APY</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500 dark:text-gray-400">DOT Staking</span>
+                    <span className="text-gray-500">DOT Staking</span>
                     <span className="font-semibold text-accent">%12 APY</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500 dark:text-gray-400">Minimum Miktar</span>
-                    <span className="font-semibold dark:text-white">0.1 ETH</span>
+                    <span className="text-gray-500">Minimum Miktar</span>
+                    <span className="font-semibold">0.1 ETH</span>
                   </div>
                 </div>
                 <div className="mt-auto">
@@ -421,24 +421,24 @@ export default function Home() {
                     <div className="h-10 w-10 rounded-full bg-yellow-100 flex items-center justify-center mb-2">
                       <span className="text-yellow-600 font-bold">BN</span>
                     </div>
-                    <h3 className="text-xl font-semibold dark:text-white">Binance TR</h3>
+                    <h3 className="text-xl font-semibold">Binance TR</h3>
                   </div>
-                  <div className="bg-orange-100 text-orange-800 text-sm font-medium px-2.5 py-0.5 rounded dark:bg-orange-900 dark:text-orange-300 animated-border-gradient">
+                  <div className="bg-orange-100 text-orange-800 text-sm font-medium px-2.5 py-0.5 rounded">
                     En Fazla Varlık
                   </div>
                 </div>
                 <div className="space-y-3 mb-6">
                   <div className="flex justify-between">
-                    <span className="text-gray-500 dark:text-gray-400">BNB Staking</span>
+                    <span className="text-gray-500">BNB Staking</span>
                     <span className="font-semibold text-accent">%9.2 APY</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500 dark:text-gray-400">AVAX Staking</span>
+                    <span className="text-gray-500">AVAX Staking</span>
                     <span className="font-semibold text-accent">%9.0 APY</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500 dark:text-gray-400">Minimum Miktar</span>
-                    <span className="font-semibold dark:text-white">0.1 BNB</span>
+                    <span className="text-gray-500">Minimum Miktar</span>
+                    <span className="font-semibold">0.1 BNB</span>
                   </div>
                 </div>
                 <div className="mt-auto">
