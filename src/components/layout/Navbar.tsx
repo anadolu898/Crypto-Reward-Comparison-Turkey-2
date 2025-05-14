@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Logo from '../ui/Logo';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -34,11 +35,10 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <Link href="/" className="flex items-center">
-            <span className={`text-xl font-bold ${scrolled ? 'text-primary' : 'text-white'}`}>
-              KriptoFaiz
-            </span>
-          </Link>
+          <Logo 
+            variant={scrolled ? 'dark' : 'light'} 
+            textClassName={scrolled ? 'text-primary' : 'text-white'}
+          />
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">

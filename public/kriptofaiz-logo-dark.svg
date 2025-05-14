@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+  <circle cx="200" cy="250" r="150" fill="#0CD4B5"/>
+  <path d="M200 100 C 120 120, 120 380, 200 400 C 280 380, 280 120, 200 100" fill="#220D53" stroke="none"/>
+  <path d="M140 250 L 250 150 L 280 180 L 165 270 Z" fill="white" stroke="none"/>
+  <path d="M165 270 L 280 180 L 280 230 L 220 290 Z" fill="white" stroke="none"/>
+  <!-- Add dark outline for visibility on light backgrounds -->
+  <path d="M200 100 C 120 120, 120 380, 200 400 C 280 380, 280 120, 200 100" fill="none" stroke="#000" stroke-width="2"/>
+  <circle cx="200" cy="250" r="150" fill="none" stroke="#000" stroke-width="2"/>
+</svg> 
