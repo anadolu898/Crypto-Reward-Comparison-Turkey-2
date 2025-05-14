@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
 
-export default function VerifyEmailPage() {
+function VerifyEmailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get('email');
@@ -73,16 +73,16 @@ export default function VerifyEmailPage() {
   
   if (verifying) {
     return (
-      <div className="py-16 bg-light dark:bg-dark min-h-[calc(100vh-64px)]">
+      <div className="py-16 bg-light min-h-[calc(100vh-64px)]">
         <div className="container mx-auto px-4">
           <div className="max-w-md mx-auto text-center">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+            <div className="bg-white rounded-lg shadow-lg p-8">
               <div className="animate-pulse">
                 <div className="w-16 h-16 mx-auto rounded-full bg-primary/20"></div>
-                <div className="h-6 w-3/4 mx-auto mt-4 rounded bg-gray-300 dark:bg-gray-700"></div>
-                <div className="h-4 w-1/2 mx-auto mt-3 rounded bg-gray-200 dark:bg-gray-600"></div>
+                <div className="h-6 w-3/4 mx-auto mt-4 rounded bg-gray-300"></div>
+                <div className="h-4 w-1/2 mx-auto mt-3 rounded bg-gray-200"></div>
               </div>
-              <p className="mt-4 text-gray-600 dark:text-gray-400">
+              <p className="mt-4 text-gray-600">
                 E-posta doğrulaması gerçekleştiriliyor...
               </p>
             </div>
@@ -94,17 +94,17 @@ export default function VerifyEmailPage() {
   
   if (verified) {
     return (
-      <div className="py-16 bg-light dark:bg-dark min-h-[calc(100vh-64px)]">
+      <div className="py-16 bg-light min-h-[calc(100vh-64px)]">
         <div className="container mx-auto px-4">
           <div className="max-w-md mx-auto text-center">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
-              <div className="w-16 h-16 mx-auto bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
-                <svg className="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="bg-white rounded-lg shadow-lg p-8">
+              <div className="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center">
+                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                 </svg>
               </div>
               <h2 className="text-2xl font-bold mt-4">E-posta Doğrulandı!</h2>
-              <p className="mt-2 text-gray-600 dark:text-gray-400">
+              <p className="mt-2 text-gray-600">
                 E-posta adresiniz başarıyla doğrulandı. Artık giriş yapabilirsiniz.
               </p>
               <div className="mt-6">
@@ -123,34 +123,34 @@ export default function VerifyEmailPage() {
   }
   
   return (
-    <div className="py-16 bg-light dark:bg-dark min-h-[calc(100vh-64px)]">
+    <div className="py-16 bg-light min-h-[calc(100vh-64px)]">
       <div className="container mx-auto px-4">
         <div className="max-w-md mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold mb-2">E-posta Doğrulama</h1>
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className="text-gray-600">
               Hesabınızı aktifleştirmek için e-posta adresinizi doğrulayın.
             </p>
           </div>
           
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+          <div className="bg-white rounded-lg shadow-lg p-8">
             {error && (
-              <div className="bg-red-50 dark:bg-red-900/30 p-4 rounded-lg mb-6">
-                <p className="text-red-800 dark:text-red-200">{error}</p>
+              <div className="bg-red-50 p-4 rounded-lg mb-6">
+                <p className="text-red-800">{error}</p>
               </div>
             )}
             
             {resendSuccess && (
-              <div className="bg-green-50 dark:bg-green-900/30 p-4 rounded-lg mb-6">
-                <p className="text-green-800 dark:text-green-200">
+              <div className="bg-green-50 p-4 rounded-lg mb-6">
+                <p className="text-green-800">
                   Doğrulama e-postası yeniden gönderildi. Lütfen gelen kutunuzu kontrol edin.
                 </p>
               </div>
             )}
             
             <div className="text-center">
-              <div className="w-16 h-16 mx-auto bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
-                <svg className="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center">
+                <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                 </svg>
               </div>
@@ -158,16 +158,16 @@ export default function VerifyEmailPage() {
               <h2 className="text-2xl font-bold mt-4">E-postanızı kontrol edin</h2>
               
               {email ? (
-                <p className="mt-2 text-gray-600 dark:text-gray-400">
-                  <span className="font-medium text-gray-800 dark:text-gray-200">{email}</span> adresine bir doğrulama bağlantısı gönderdik.
+                <p className="mt-2 text-gray-600">
+                  <span className="font-medium text-gray-800">{email}</span> adresine bir doğrulama bağlantısı gönderdik.
                 </p>
               ) : (
-                <p className="mt-2 text-gray-600 dark:text-gray-400">
+                <p className="mt-2 text-gray-600">
                   E-posta adresinize bir doğrulama bağlantısı gönderdik.
                 </p>
               )}
               
-              <p className="mt-4 text-gray-600 dark:text-gray-400">
+              <p className="mt-4 text-gray-600">
                 Doğrulama e-postasını almadıysanız, spam klasörünüzü kontrol edin veya aşağıdaki düğmeyi kullanarak yeniden gönderin.
               </p>
               
@@ -181,8 +181,8 @@ export default function VerifyEmailPage() {
                 </button>
               </div>
               
-              <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <p className="text-sm text-gray-600">
                   Sorun mu yaşıyorsunuz?{' '}
                   <Link href="/contact" className="text-primary hover:text-secondary font-medium">
                     Bizimle iletişime geçin
@@ -200,5 +200,29 @@ export default function VerifyEmailPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense fallback={
+      <div className="py-16 bg-light min-h-[calc(100vh-64px)]">
+        <div className="container mx-auto px-4 text-center">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 max-w-md mx-auto rounded"></div>
+            <div className="h-4 bg-gray-200 max-w-sm mx-auto mt-2 rounded"></div>
+            <div className="max-w-md mx-auto mt-8 bg-white rounded-lg shadow-lg p-8">
+              <div className="w-16 h-16 mx-auto rounded-full bg-gray-200"></div>
+              <div className="h-6 w-1/2 mx-auto mt-4 rounded bg-gray-200"></div>
+              <div className="h-4 w-3/4 mx-auto mt-3 rounded bg-gray-200"></div>
+              <div className="h-4 w-2/3 mx-auto mt-2 rounded bg-gray-200"></div>
+              <div className="h-10 bg-gray-200 rounded mx-auto mt-6 w-full"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }>
+      <VerifyEmailContent />
+    </Suspense>
   );
 } 

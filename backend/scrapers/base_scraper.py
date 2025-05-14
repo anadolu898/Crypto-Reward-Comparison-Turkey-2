@@ -5,6 +5,9 @@ import requests
 from datetime import datetime
 from abc import ABC, abstractmethod
 import warnings
+import time
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 # Suppress SSL verification warnings
 warnings.filterwarnings('ignore', message='Unverified HTTPS request')
@@ -51,10 +54,22 @@ class BaseScraper(ABC):
         # Initialize data storage
         self.staking_data = []
         self.campaign_data = []
+        
+        # Create a session with retry capability
+        self.session = requests.Session()
+        retry_strategy = Retry(
+            total=3,
+            backoff_factor=1,
+            status_forcelist=[429, 500, 502, 503, 504],
+        )
+        adapter = HTTPAdapter(max_retries=retry_strategy)
+        self.session.mount("http://", adapter)
+        self.session.mount("https://", adapter)
     
     def get_url(self, url, headers=None, params=None):
         """
         Make a GET request to the specified URL with optional headers and parameters.
+        Includes retry mechanism and better error handling.
         
         Args:
             url (str): URL to fetch
@@ -64,17 +79,40 @@ class BaseScraper(ABC):
         Returns:
             requests.Response or None: Response object or None if request fails
         """
+        if headers is None:
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
+        
+        # Try first with verify=True
         try:
-            if headers is None:
-                headers = {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-                }
-            
-            response = requests.get(url, headers=headers, params=params, timeout=10, verify=False)
+            response = self.session.get(url, headers=headers, params=params, timeout=15, verify=True)
             response.raise_for_status()
             return response
+        except requests.exceptions.SSLError:
+            self.logger.warning(f"SSL verification failed for {url}, trying without verification")
+            try:
+                # If SSL verification fails, try without it
+                response = self.session.get(url, headers=headers, params=params, timeout=15, verify=False)
+                response.raise_for_status()
+                return response
+            except requests.exceptions.RequestException as e:
+                self.logger.error(f"Error fetching {url}: {str(e)}")
+                return None
         except requests.exceptions.RequestException as e:
+            # For non-SSL errors
             self.logger.error(f"Error fetching {url}: {str(e)}")
+            
+            # If it's a timeout, try one more time with a longer timeout
+            if isinstance(e, requests.exceptions.Timeout):
+                self.logger.info(f"Request timed out, retrying with longer timeout for {url}")
+                try:
+                    response = self.session.get(url, headers=headers, params=params, timeout=30, verify=False)
+                    response.raise_for_status()
+                    return response
+                except requests.exceptions.RequestException as e:
+                    self.logger.error(f"Error on retry for {url}: {str(e)}")
+                    return None
             return None
     
     def save_data(self):

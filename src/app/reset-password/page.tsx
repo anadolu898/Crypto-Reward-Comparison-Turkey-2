@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
 
-export default function ResetPasswordPage() {
+function ResetPasswordContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
@@ -83,20 +83,20 @@ export default function ResetPasswordPage() {
   
   if (success) {
     return (
-      <div className="py-16 bg-light dark:bg-dark min-h-[calc(100vh-64px)]">
+      <div className="py-16 bg-light min-h-[calc(100vh-64px)]">
         <div className="container mx-auto px-4">
           <div className="max-w-md mx-auto text-center">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
-              <div className="w-16 h-16 mx-auto bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
-                <svg className="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="bg-white rounded-lg shadow-lg p-8">
+              <div className="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center">
+                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                 </svg>
               </div>
               <h2 className="text-2xl font-bold mt-4">Şifre Başarıyla Sıfırlandı!</h2>
-              <p className="mt-2 text-gray-600 dark:text-gray-400">
+              <p className="mt-2 text-gray-600">
                 Şifreniz başarıyla değiştirildi. Yeni şifreniz ile giriş yapabilirsiniz.
               </p>
-              <p className="mt-4 text-gray-600 dark:text-gray-400">
+              <p className="mt-4 text-gray-600">
                 Giriş sayfasına yönlendiriliyorsunuz...
               </p>
               <div className="mt-6">
@@ -112,20 +112,20 @@ export default function ResetPasswordPage() {
   }
   
   return (
-    <div className="py-16 bg-light dark:bg-dark min-h-[calc(100vh-64px)]">
+    <div className="py-16 bg-light min-h-[calc(100vh-64px)]">
       <div className="container mx-auto px-4">
         <div className="max-w-md mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold mb-2">Şifre Sıfırlama</h1>
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className="text-gray-600">
               Lütfen yeni şifrenizi belirleyin.
             </p>
           </div>
           
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+          <div className="bg-white rounded-lg shadow-lg p-8">
             {error && (
-              <div className="bg-red-50 dark:bg-red-900/30 p-4 rounded-lg mb-6">
-                <p className="text-red-800 dark:text-red-200">{error}</p>
+              <div className="bg-red-50 p-4 rounded-lg mb-6">
+                <p className="text-red-800">{error}</p>
                 {error.includes('süresi dolmuş') && (
                   <div className="mt-2">
                     <Link href="/forgot-password" className="text-primary hover:text-secondary font-medium">
@@ -138,7 +138,7 @@ export default function ResetPasswordPage() {
             
             <form onSubmit={handleSubmit}>
               <div className="mb-6">
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
                   Yeni Şifre
                 </label>
                 <input
@@ -147,18 +147,18 @@ export default function ResetPasswordPage() {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 dark:border-gray-700 rounded-md py-2 px-3 bg-white dark:bg-gray-900 focus:ring-primary focus:border-primary"
+                  className="w-full border border-gray-300 rounded-md py-2 px-3 bg-white focus:ring-primary focus:border-primary"
                   placeholder="••••••••"
                   required
                   disabled={!token}
                 />
-                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                <p className="mt-1 text-sm text-gray-500">
                   En az 8 karakter, bir büyük harf, bir küçük harf ve bir rakam içermelidir.
                 </p>
               </div>
               
               <div className="mb-6">
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
                   Şifreyi Onayla
                 </label>
                 <input
@@ -167,7 +167,7 @@ export default function ResetPasswordPage() {
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 dark:border-gray-700 rounded-md py-2 px-3 bg-white dark:bg-gray-900 focus:ring-primary focus:border-primary"
+                  className="w-full border border-gray-300 rounded-md py-2 px-3 bg-white focus:ring-primary focus:border-primary"
                   placeholder="••••••••"
                   required
                   disabled={!token}
@@ -183,7 +183,7 @@ export default function ResetPasswordPage() {
               </button>
               
               <div className="mt-6 text-center">
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-sm text-gray-600">
                   <Link href="/login" className="text-primary hover:text-secondary font-medium">
                     Giriş sayfasına dön
                   </Link>
@@ -194,5 +194,30 @@ export default function ResetPasswordPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={
+      <div className="py-16 bg-light min-h-[calc(100vh-64px)]">
+        <div className="container mx-auto px-4 text-center">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 max-w-md mx-auto rounded"></div>
+            <div className="h-4 bg-gray-200 max-w-sm mx-auto mt-2 rounded"></div>
+            <div className="max-w-md mx-auto mt-8 bg-white rounded-lg shadow-lg p-8">
+              <div className="h-10 bg-gray-200 rounded mb-4"></div>
+              <div className="h-10 bg-gray-200 rounded mb-2"></div>
+              <div className="h-4 bg-gray-200 w-3/4 rounded mb-6"></div>
+              <div className="h-10 bg-gray-200 rounded mb-4"></div>
+              <div className="h-10 bg-gray-200 rounded mb-6"></div>
+              <div className="h-12 bg-primary/20 rounded"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }>
+      <ResetPasswordContent />
+    </Suspense>
   );
 } 

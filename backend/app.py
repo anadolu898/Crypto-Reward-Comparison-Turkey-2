@@ -95,6 +95,15 @@ scrapers = {
     "bitay": BitayScraper(data_dir=DATA_DIR, logs_dir=LOGS_DIR)
 }
 
+# Health check endpoint
+@app.route('/api/health', methods=['GET'])
+def health_check():
+    return jsonify({
+        "status": "healthy",
+        "timestamp": datetime.utcnow().isoformat(),
+        "service": "KriptoFaiz API"
+    })
+
 # Route to get data for all platforms
 @app.route('/api/rewards', methods=['GET'])
 def get_all_rewards():
