@@ -205,7 +205,7 @@ export default function PremiumPage() {
                 İşleniyor...
               </span>
             ) : (
-              'Premium'a Yükselt'
+              'Premium\'a Yükselt'
             )}
           </button>
           <p className="text-gray-500 dark:text-gray-400 mt-4 text-sm">
