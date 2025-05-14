@@ -55,12 +55,13 @@ class BaseScraper(ABC):
         self.staking_data = []
         self.campaign_data = []
         
-        # Create a session with retry capability
+        # Create a session with enhanced retry capability
         self.session = requests.Session()
         retry_strategy = Retry(
-            total=3,
-            backoff_factor=1,
+            total=5,  # Increased from 3 to 5
+            backoff_factor=2,  # Increased from 1 to 2 for exponential backoff
             status_forcelist=[429, 500, 502, 503, 504],
+            allowed_methods=["GET", "POST"],  # Allow retry for both GET and POST
         )
         adapter = HTTPAdapter(max_retries=retry_strategy)
         self.session.mount("http://", adapter)
@@ -69,7 +70,7 @@ class BaseScraper(ABC):
     def get_url(self, url, headers=None, params=None):
         """
         Make a GET request to the specified URL with optional headers and parameters.
-        Includes retry mechanism and better error handling.
+        Includes enhanced retry mechanism and better error handling.
         
         Args:
             url (str): URL to fetch
@@ -84,36 +85,42 @@ class BaseScraper(ABC):
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
             }
         
-        # Try first with verify=True
-        try:
-            response = self.session.get(url, headers=headers, params=params, timeout=15, verify=True)
-            response.raise_for_status()
-            return response
-        except requests.exceptions.SSLError:
-            self.logger.warning(f"SSL verification failed for {url}, trying without verification")
+        max_attempts = 3
+        current_attempt = 0
+        wait_time = 1  # Start with 1 second wait
+        
+        while current_attempt < max_attempts:
+            current_attempt += 1
+            
+            # Try with different SSL verification strategies
             try:
-                # If SSL verification fails, try without it
-                response = self.session.get(url, headers=headers, params=params, timeout=15, verify=False)
+                # First attempt: Try with verification and normal timeout
+                if current_attempt == 1:
+                    response = self.session.get(url, headers=headers, params=params, timeout=15, verify=True)
+                # Second attempt: Try without verification and normal timeout
+                elif current_attempt == 2:
+                    self.logger.warning(f"Retry {current_attempt} for {url}: without SSL verification")
+                    response = self.session.get(url, headers=headers, params=params, timeout=15, verify=False)
+                # Third attempt: Try without verification and longer timeout
+                else:
+                    self.logger.warning(f"Retry {current_attempt} for {url}: without SSL verification and extended timeout")
+                    response = self.session.get(url, headers=headers, params=params, timeout=30, verify=False)
+                
                 response.raise_for_status()
                 return response
-            except requests.exceptions.RequestException as e:
-                self.logger.error(f"Error fetching {url}: {str(e)}")
-                return None
-        except requests.exceptions.RequestException as e:
-            # For non-SSL errors
-            self.logger.error(f"Error fetching {url}: {str(e)}")
-            
-            # If it's a timeout, try one more time with a longer timeout
-            if isinstance(e, requests.exceptions.Timeout):
-                self.logger.info(f"Request timed out, retrying with longer timeout for {url}")
-                try:
-                    response = self.session.get(url, headers=headers, params=params, timeout=30, verify=False)
-                    response.raise_for_status()
-                    return response
-                except requests.exceptions.RequestException as e:
-                    self.logger.error(f"Error on retry for {url}: {str(e)}")
+                
+            except (requests.exceptions.SSLError, requests.exceptions.RequestException) as e:
+                error_type = "SSL Error" if isinstance(e, requests.exceptions.SSLError) else "Request Error"
+                self.logger.warning(f"{error_type} on attempt {current_attempt}/{max_attempts} for {url}: {str(e)}")
+                
+                # If it's the last attempt, log the error as fatal and return None
+                if current_attempt >= max_attempts:
+                    self.logger.error(f"All attempts failed for {url}: {str(e)}")
                     return None
-            return None
+                
+                # Exponential backoff
+                time.sleep(wait_time)
+                wait_time *= 2  # Double the wait time for next attempt
     
     def save_data(self):
         """

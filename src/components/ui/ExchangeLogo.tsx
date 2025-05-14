@@ -39,21 +39,41 @@ const ExchangeLogo: React.FC<ExchangeLogoProps> = ({
   className = ''
 }) => {
   const [error, setError] = useState(false);
+  const [currentPath, setCurrentPath] = useState<string | null>(null);
   const normalizedName = exchange.toLowerCase().replace(' ', '-');
   
-  // Path mapping for known exchanges
-  const logoPath = `/images/exchanges/${normalizedName}-logo.svg`;
+  // Path options for finding the logo
+  const pathOptions = [
+    `/images/exchanges/${normalizedName}-logo.svg`,  // Primary path in images/exchanges
+    `/logos/${normalizedName}-logo.svg`,             // Secondary path in /logos
+    `/images/exchanges/${normalizedName}-logo.png`,  // PNG fallback in images/exchanges
+    `/logos/${normalizedName}-logo.png`,             // PNG fallback in /logos
+    `/${normalizedName}-logo.png`,                   // Root directory fallback
+  ];
   
-  // Fallback display for exchanges without logos
+  // Handle error and try the next path option
   const handleError = () => {
-    setError(true);
+    if (!currentPath) {
+      // First error, try the first path
+      setCurrentPath(pathOptions[0]);
+      return;
+    }
+    
+    // Find the current index and try the next option
+    const currentIndex = pathOptions.indexOf(currentPath);
+    if (currentIndex < pathOptions.length - 1) {
+      setCurrentPath(pathOptions[currentIndex + 1]);
+    } else {
+      // We've tried all options, show the fallback
+      setError(true);
+    }
   };
-
+  
   // Get the exchange initial and color for fallback
   const initial = exchange.charAt(0);
   const color = EXCHANGE_COLORS[exchange] || '#6c757d'; // Default gray if not defined
   
-  // If error loading the logo or no logo exists, show a styled fallback
+  // If error loading all logo options, show a styled fallback
   if (error) {
     return (
       <div 
@@ -71,7 +91,10 @@ const ExchangeLogo: React.FC<ExchangeLogoProps> = ({
     );
   }
   
-  // Otherwise show the image
+  // The path to try
+  const logoPath = currentPath || pathOptions[0];
+  
+  // Show the image with the current path attempt
   return (
     <div className={`relative ${className}`} style={{ width, height }}>
       <Image
