@@ -54,6 +54,8 @@ export default function Home() {
     '/platform-logos/bitexen.png',
     '/platform-logos/bitci.png',
     '/platform-logos/cointr.png',
+    '/platform-logos/icrypex.png',
+    '/platform-logos/bitay.png',
   ];
 
   // Stats for animated counters
