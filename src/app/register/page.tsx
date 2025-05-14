@@ -16,6 +16,7 @@ export default function RegisterPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [autoActivated, setAutoActivated] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -47,17 +48,18 @@ export default function RegisterPage() {
       setSuccess(true);
       setLoading(false);
       
-      // Check if auto-activated (in development mode)
+      // Check if auto-activated
       if (response.data.auto_activated) {
+        setAutoActivated(true);
         // Redirect to login page if auto-activated
         setTimeout(() => {
           router.push('/login');
-        }, 1500);
+        }, 3000); // Give user more time to read the message
       } else {
         // Redirect to verification page if not auto-activated
         setTimeout(() => {
           router.push(`/verify-email?email=${encodeURIComponent(formData.email)}`);
-        }, 1500);
+        }, 3000);
       }
       
     } catch (error: any) {
@@ -82,10 +84,29 @@ export default function RegisterPage() {
           </div>
           
           {success ? (
-            <div className="bg-green-50 dark:bg-green-900 p-4 rounded-lg mb-6 text-center">
-              <p className="text-green-800 dark:text-green-200">
-                Kayıt başarılı! {process.env.NODE_ENV === 'development' ? 'Giriş sayfasına yönlendiriliyorsunuz.' : 'E-posta adresinize doğrulama bağlantısı gönderildi.'}
-              </p>
+            <div className="bg-green-50 dark:bg-green-900 p-6 rounded-lg mb-6 text-center">
+              <h3 className="text-green-800 dark:text-green-200 text-xl font-semibold mb-3">
+                Hesabınız Başarıyla Oluşturuldu!
+              </h3>
+              {autoActivated ? (
+                <div>
+                  <p className="text-green-700 dark:text-green-300 mb-2">
+                    Hesabınız aktif edildi ve kullanıma hazır.
+                  </p>
+                  <p className="text-green-700 dark:text-green-300 mb-2">
+                    Kayıt sırasında belirttiğiniz e-posta adresine bir hoş geldin e-postası gönderildi.
+                  </p>
+                  <p className="text-green-700 dark:text-green-300 font-medium mt-4">
+                    Giriş sayfasına yönlendiriliyorsunuz...
+                  </p>
+                </div>
+              ) : (
+                <div>
+                  <p className="text-green-700 dark:text-green-300">
+                    Lütfen e-posta adresinize gönderilen doğrulama bağlantısına tıklayarak hesabınızı aktifleştirin.
+                  </p>
+                </div>
+              )}
             </div>
           ) : (
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">

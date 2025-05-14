@@ -7,7 +7,7 @@ from flask_jwt_extended import (
 from datetime import datetime, timedelta
 import re
 from models import db, User, Token
-from email_service import send_verification_email, send_password_reset_email
+from email_service import send_verification_email, send_password_reset_email, send_welcome_email
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 import logging
@@ -111,38 +111,26 @@ def register():
         user = User(email=email, name=name)
         user.password = password  # This will hash the password
         
-        # Check if we're in development mode
-        is_dev_mode = os.environ.get('CRYPTO_ENV', 'development') == 'development'
-        
-        # Auto-activate the user in development environment
-        if is_dev_mode:
-            user.is_active = True
-            logger.info(f"Auto-activating user {email} in development mode")
+        # Auto-activate all accounts for now
+        user.is_active = True
+        logger.info(f"Auto-activating user {email}")
         
         db.session.add(user)
         db.session.commit()
         
-        # In production, send verification email
-        # In development, skip email verification
-        if not is_dev_mode:
-            # Generate verification token and send email
-            token = user.generate_verification_token()
-            send_result = send_verification_email(user, token)
-            if not send_result:
-                logger.warning(f"Failed to send verification email to {email}")
+        # Send welcome email for auto-activated accounts
+        try:
+            send_welcome_email(user)
+            logger.info(f"Welcome email sent to {email}")
+        except Exception as e:
+            logger.error(f"Failed to send welcome email: {str(e)}")
         
-        # Return different messages based on environment
-        if is_dev_mode:
-            return jsonify({
-                "message": "Kayıt başarılı! (Geliştirme modunda otomatik aktivasyon)",
-                "email": email,
-                "auto_activated": True
-            }), 201
-        else:
-            return jsonify({
-                "message": "Kayıt başarılı! Lütfen e-posta adresinizi doğrulayın.",
-                "email": email
-            }), 201
+        # Return success message
+        return jsonify({
+            "message": "Kayıt başarılı! Hesabınız aktif edildi.",
+            "email": email,
+            "auto_activated": True
+        }), 201
         
     except Exception as e:
         logger.error(f"Registration error: {str(e)}")
