@@ -63,7 +63,7 @@ const SimpleLogoCarousel: React.FC<SimpleLogoProps> = ({
           >
             <img
               src={logo}
-              alt={`Platform Logo ${index}`}
+              alt={`Platform logo ${index % logos.length + 1}`}
               width={width}
               height={height}
               style={{ 
