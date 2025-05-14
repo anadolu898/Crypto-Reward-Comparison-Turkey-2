@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { apiService } from '../../lib/api';
 import { PlatformData } from '../../lib/types';
+import ExchangeLogo from '../../components/ui/ExchangeLogo';
 
 export default function PlatformsPage() {
   const [platforms, setPlatforms] = useState<PlatformData[]>([]);
@@ -197,17 +197,12 @@ export default function PlatformsPage() {
                     <div className="p-6">
                       <div className="flex items-center mb-4">
                         <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-800 mr-4 flex items-center justify-center">
-                          {platform.logoUrl ? (
-                            <Image 
-                              src={platform.logoUrl} 
-                              alt={platform.platform} 
-                              width={48} 
-                              height={48} 
-                              className="object-contain"
-                            />
-                          ) : (
-                            <div className="text-xl font-bold text-primary">{platform.platform.charAt(0)}</div>
-                          )}
+                          <ExchangeLogo 
+                            exchange={platform.platform} 
+                            width={48} 
+                            height={48} 
+                            className="object-contain"
+                          />
                         </div>
                         <div>
                           <h3 className="text-xl font-bold">{platform.platform}</h3>

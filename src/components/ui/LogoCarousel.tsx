@@ -2,11 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
+import ExchangeLogo, { ExchangeName } from './ExchangeLogo';
 
 interface Logo {
-  src: string;
-  alt: string;
+  exchange: ExchangeName;
   width?: number;
   height?: number;
 }
@@ -72,39 +71,20 @@ export default function LogoCarousel({
   if (duplicatedLogos.length === 0) {
     return null;
   }
-
-  // Handle SVG file extensions to use Image component properly
+  
+  // Create a logo element using our ExchangeLogo component
   const getLogoElement = (logo: Logo, index: number) => {
-    const isSvg = logo.src.toLowerCase().endsWith('.svg');
-    
     return (
       <div
         key={index}
         className={`flex items-center justify-center ${itemClassName}`}
       >
-        {isSvg ? (
-          <div 
-            className="relative opacity-80 hover:opacity-100 transition-opacity duration-300 hover:scale-105 transform"
-            style={{ width: logo.width || 140, height: logo.height || 50 }}
-          >
-            <Image
-              src={logo.src}
-              alt={logo.alt}
-              fill
-              style={{ objectFit: 'contain' }}
-              priority={index < 5}
-            />
-          </div>
-        ) : (
-          <Image
-            src={logo.src}
-            alt={logo.alt}
-            width={logo.width || 140}
-            height={logo.height || 50}
-            className="opacity-80 hover:opacity-100 transition-opacity duration-300 hover:scale-105 transform"
-            priority={index < 5}
-          />
-        )}
+        <ExchangeLogo
+          exchange={logo.exchange}
+          width={logo.width || 140}
+          height={logo.height || 50}
+          className="opacity-80 hover:opacity-100 transition-opacity duration-300 hover:scale-105 transform"
+        />
       </div>
     );
   };

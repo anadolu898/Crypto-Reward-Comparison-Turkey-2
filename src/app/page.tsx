@@ -48,11 +48,11 @@ export default function Home() {
 
   // Data for platform logos
   const platformLogos = [
-    { src: '/logos/btcturk-logo.svg', alt: 'BtcTurk Logo', width: 150, height: 50 },
-    { src: '/images/exchanges/paribu-logo.svg', alt: 'Paribu Logo', width: 150, height: 50 },
-    { src: '/images/exchanges/binance-logo.svg', alt: 'Binance Logo', width: 150, height: 50 },
-    { src: '/logos/bitci-logo.svg', alt: 'Bitci Logo', width: 150, height: 50 },
-    { src: '/logos/bitexen-logo.svg', alt: 'Bitexen Logo', width: 150, height: 50 },
+    { exchange: 'BtcTurk', width: 150, height: 50 },
+    { exchange: 'Paribu', width: 150, height: 50 },
+    { exchange: 'Binance', width: 150, height: 50 },
+    { exchange: 'Bitci', width: 150, height: 50 },
+    { exchange: 'Bitexen', width: 150, height: 50 },
   ];
 
   // Stats for animated counters

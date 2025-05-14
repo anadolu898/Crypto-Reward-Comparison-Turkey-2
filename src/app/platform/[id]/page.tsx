@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { apiService } from '../../../lib/api';
+import ExchangeLogo from '../../../components/ui/ExchangeLogo';
 
 // Define local types to avoid import issues
 interface StakingOffer {
@@ -138,13 +139,22 @@ export default function PlatformPage({ params }: PlatformPageProps) {
         {/* Platform Header */}
         <div className="mb-12">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-            <div>
-              <h1 className="text-3xl font-bold mb-2">{platformData.platform}</h1>
-              <p className="text-gray-600 dark:text-gray-400">
-                <a href={platformData.website} target="_blank" rel="noopener noreferrer" className="text-primary hover:text-secondary">
-                  {platformData.website}
-                </a>
-              </p>
+            <div className="flex items-center">
+              <div className="mr-4">
+                <ExchangeLogo 
+                  exchange={platformData.platform} 
+                  width={56} 
+                  height={56} 
+                />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold mb-2">{platformData.platform}</h1>
+                <p className="text-gray-600 dark:text-gray-400">
+                  <a href={platformData.website} target="_blank" rel="noopener noreferrer" className="text-primary hover:text-secondary">
+                    {platformData.website}
+                  </a>
+                </p>
+              </div>
             </div>
             <div className="mt-4 md:mt-0">
               <Link href="/comparison" className="text-primary hover:text-secondary mr-4">
