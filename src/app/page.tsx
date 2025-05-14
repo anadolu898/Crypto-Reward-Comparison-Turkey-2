@@ -53,6 +53,7 @@ export default function Home() {
     { exchange: 'Binance', width: 150, height: 50 },
     { exchange: 'Bitci', width: 150, height: 50 },
     { exchange: 'Bitexen', width: 150, height: 50 },
+    { exchange: 'CoinTR', width: 150, height: 50 },
   ];
 
   // Stats for animated counters
