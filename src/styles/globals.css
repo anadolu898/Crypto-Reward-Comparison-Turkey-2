@@ -18,12 +18,6 @@
   --color-light-card: #ffffff;
 }
 
-.dark {
-  --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 15, 17, 21;
-  --background-end-rgb: 26, 30, 39;
-}
-
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
@@ -36,15 +30,6 @@ body {
   line-height: 1.6;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-}
-
-/* Better text contrast for dark mode */
-.dark p {
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
-  color: rgba(255, 255, 255, 1);
 }
 
 /* Basic font sizes to ensure readability on mobile */
@@ -84,7 +69,7 @@ html {
   }
   
   .card {
-    @apply bg-white dark:bg-dark-card rounded-large shadow-md p-6 md:p-8 hover:shadow-lg transition-all duration-300 space-y-4;
+    @apply bg-white rounded-large shadow-md p-6 md:p-8 hover:shadow-lg transition-all duration-300 space-y-4;
   }
   
   .gradient-text {
@@ -120,7 +105,7 @@ html {
 
   /* Focus styles for keyboard navigation */
   a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
-    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-white dark:ring-offset-dark;
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-white;
   }
 
   /* Card hover effects */
@@ -171,7 +156,7 @@ html {
 
   /* Glassmorphism base */
   .glassmorphism {
-    @apply backdrop-filter backdrop-blur-lg bg-white/80 dark:bg-dark-card/60;
+    @apply backdrop-filter backdrop-blur-lg bg-white/80;
   }
 
   /* Loading skeleton animation */
@@ -187,15 +172,15 @@ html {
   }
 
   thead th {
-    @apply py-4 font-semibold text-left border-b dark:border-gray-700;
+    @apply py-4 font-semibold text-left border-b;
   }
 
   tbody td {
-    @apply py-4 border-b dark:border-gray-800;
+    @apply py-4 border-b;
   }
 
   tr:hover {
-    @apply bg-gray-50 dark:bg-dark/50;
+    @apply bg-gray-50;
   }
 
   /* Make tables responsive */

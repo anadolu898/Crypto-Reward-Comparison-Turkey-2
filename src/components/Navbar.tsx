@@ -8,7 +8,6 @@ import { useAuth } from '../lib/auth/AuthContext';
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   
   const { user, isAuthenticated, logout } = useAuth();
@@ -24,12 +23,6 @@ const Navbar = () => {
 
     window.addEventListener('scroll', handleScroll);
     
-    // Check system preference for dark mode
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      document.documentElement.classList.add('dark');
-      setIsDarkMode(true);
-    }
-
     // Close dropdown when clicking outside
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Element;
@@ -45,16 +38,6 @@ const Navbar = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-
-  const toggleDarkMode = () => {
-    if (isDarkMode) {
-      document.documentElement.classList.remove('dark');
-      setIsDarkMode(false);
-    } else {
-      document.documentElement.classList.add('dark');
-      setIsDarkMode(true);
-    }
-  };
   
   const handleLogout = async () => {
     try {
@@ -70,7 +53,7 @@ const Navbar = () => {
     <nav 
       className={`fixed w-full z-50 transition-all duration-300 ${
         scrolled 
-          ? 'bg-white/90 dark:bg-dark/90 backdrop-blur-sm shadow-md py-2' 
+          ? 'bg-white/90 backdrop-blur-sm shadow-md py-2' 
           : 'bg-transparent py-4'
       }`}
     >
@@ -87,7 +70,7 @@ const Navbar = () => {
                 className="object-contain"
               />
             </div>
-            <span className={`text-xl font-bold ${scrolled ? 'text-primary dark:text-white' : 'text-white dark:text-white'}`}>
+            <span className={`text-xl font-bold ${scrolled ? 'text-primary' : 'text-white'}`}>
               KriptoFaiz
             </span>
           </Link>
@@ -97,7 +80,7 @@ const Navbar = () => {
             <Link 
               href="/comparison" 
               className={`font-medium hover:text-primary transition-colors ${
-                scrolled ? 'text-gray-700 dark:text-gray-300' : 'text-white/90 dark:text-white/90'
+                scrolled ? 'text-gray-700' : 'text-white/90'
               }`}
             >
               Karşılaştırma
@@ -105,7 +88,7 @@ const Navbar = () => {
             <Link 
               href="/platforms" 
               className={`font-medium hover:text-primary transition-colors ${
-                scrolled ? 'text-gray-700 dark:text-gray-300' : 'text-white/90 dark:text-white/90'
+                scrolled ? 'text-gray-700' : 'text-white/90'
               }`}
             >
               Platformlar
@@ -113,7 +96,7 @@ const Navbar = () => {
             <Link 
               href="/news" 
               className={`font-medium hover:text-primary transition-colors ${
-                scrolled ? 'text-gray-700 dark:text-gray-300' : 'text-white/90 dark:text-white/90'
+                scrolled ? 'text-gray-700' : 'text-white/90'
               }`}
             >
               Haberler
@@ -121,7 +104,7 @@ const Navbar = () => {
             <Link 
               href="/faq" 
               className={`font-medium hover:text-primary transition-colors ${
-                scrolled ? 'text-gray-700 dark:text-gray-300' : 'text-white/90 dark:text-white/90'
+                scrolled ? 'text-gray-700' : 'text-white/90'
               }`}
             >
               SSS
@@ -129,7 +112,7 @@ const Navbar = () => {
             <Link 
               href="/about" 
               className={`font-medium hover:text-primary transition-colors ${
-                scrolled ? 'text-gray-700 dark:text-gray-300' : 'text-white/90 dark:text-white/90'
+                scrolled ? 'text-gray-700' : 'text-white/90'
               }`}
             >
               Hakkımızda
@@ -138,30 +121,12 @@ const Navbar = () => {
 
           {/* Right side buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <button 
-              onClick={toggleDarkMode}
-              className={`p-2 rounded-full ${
-                scrolled ? 'text-gray-700 dark:text-gray-300' : 'text-white dark:text-white'
-              }`}
-              aria-label="Toggle dark mode"
-            >
-              {isDarkMode ? (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />
-                </svg>
-              ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-                </svg>
-              )}
-            </button>
-            
             {isAuthenticated ? (
               <div className="relative">
                 <button
                   type="button"
                   className={`flex items-center space-x-2 ${
-                    scrolled ? 'text-gray-700 dark:text-gray-300' : 'text-white/90 dark:text-white/90'
+                    scrolled ? 'text-gray-700' : 'text-white/90'
                   }`}
                   id="user-menu-button"
                   aria-expanded={userMenuOpen}
@@ -181,18 +146,18 @@ const Navbar = () => {
                 {userMenuOpen && (
                   <div 
                     id="user-dropdown"
-                    className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-10"
+                    className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10"
                   >
                     <Link 
                       href="/account/dashboard" 
-                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       onClick={() => setUserMenuOpen(false)}
                     >
                       Dashboard
                     </Link>
                     <Link 
                       href="/account/profile" 
-                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       onClick={() => setUserMenuOpen(false)}
                     >
                       Profil Ayarları
@@ -200,14 +165,14 @@ const Navbar = () => {
                     {user?.is_premium ? (
                       <Link 
                         href="/subscription" 
-                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         onClick={() => setUserMenuOpen(false)}
                       >
                         Premium Üyelik
                       </Link>
                     ) : null}
                     <button 
-                      className="block w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
                       onClick={handleLogout}
                     >
                       Çıkış Yap
@@ -219,7 +184,7 @@ const Navbar = () => {
               <Link 
                 href="/login" 
                 className={`font-medium hover:text-primary transition-colors ${
-                  scrolled ? 'text-gray-700 dark:text-gray-300' : 'text-white/90 dark:text-white/90'
+                  scrolled ? 'text-gray-700' : 'text-white/90'
                 }`}
               >
                 Giriş Yap
@@ -234,7 +199,7 @@ const Navbar = () => {
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center">
             <button
-              className={`${scrolled ? 'text-gray-700 dark:text-white' : 'text-white'}`}
+              className={`${scrolled ? 'text-gray-700' : 'text-white'}`}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label="Toggle menu"
             >
@@ -253,62 +218,62 @@ const Navbar = () => {
 
         {/* Mobile menu */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 mt-4 bg-white dark:bg-dark-card rounded-large shadow-lg absolute left-4 right-4">
+          <div className="md:hidden py-4 mt-4 bg-white rounded-large shadow-lg absolute left-4 right-4">
             <div className="px-4 py-2">
               <Link 
                 href="/comparison" 
-                className="block py-2 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium"
+                className="block py-2 text-gray-700 hover:text-primary font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Karşılaştırma
               </Link>
               <Link 
                 href="/platforms" 
-                className="block py-2 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium"
+                className="block py-2 text-gray-700 hover:text-primary font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Platformlar
               </Link>
               <Link 
                 href="/news" 
-                className="block py-2 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium"
+                className="block py-2 text-gray-700 hover:text-primary font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Haberler
               </Link>
               <Link 
                 href="/faq" 
-                className="block py-2 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium"
+                className="block py-2 text-gray-700 hover:text-primary font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 SSS
               </Link>
               <Link 
                 href="/about" 
-                className="block py-2 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium"
+                className="block py-2 text-gray-700 hover:text-primary font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Hakkımızda
               </Link>
               
               {isAuthenticated ? (
-                <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <div className="mt-4 pt-4 border-t border-gray-200">
                   <Link 
                     href="/account/dashboard" 
-                    className="block py-2 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium"
+                    className="block py-2 text-gray-700 hover:text-primary font-medium"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Dashboard
                   </Link>
                   <Link 
                     href="/account/profile" 
-                    className="block py-2 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium"
+                    className="block py-2 text-gray-700 hover:text-primary font-medium"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Profil Ayarları
                   </Link>
                   <button 
-                    className="block w-full text-left py-2 text-red-600 dark:text-red-400 font-medium"
+                    className="block w-full text-left py-2 text-red-600 font-medium"
                     onClick={() => {
                       handleLogout();
                       setIsMenuOpen(false);
@@ -318,29 +283,14 @@ const Navbar = () => {
                   </button>
                 </div>
               ) : (
-                <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
                   <Link 
                     href="/login" 
-                    className="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium"
+                    className="text-gray-700 hover:text-primary font-medium"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Giriş Yap
                   </Link>
-                  <button 
-                    onClick={toggleDarkMode}
-                    className="p-2 rounded-full text-gray-700 dark:text-gray-300"
-                    aria-label="Toggle dark mode"
-                  >
-                    {isDarkMode ? (
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />
-                      </svg>
-                    ) : (
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-                      </svg>
-                    )}
-                  </button>
                   <Link 
                     href="/subscription" 
                     className="btn-accent"
