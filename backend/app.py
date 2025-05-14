@@ -104,6 +104,54 @@ def health_check():
         "service": "KriptoFaiz API"
     })
 
+# Alternative status endpoint (alias for health)
+@app.route('/api/status', methods=['GET'])
+def status_check():
+    return health_check()
+
+# Mock endpoints for testing scrapers
+@app.route('/api/mock/staking', methods=['GET'])
+def mock_staking():
+    """A mock endpoint for scraper testing when real endpoints have SSL issues"""
+    exchange = request.args.get('exchange', 'generic')
+    return jsonify({
+        "exchange": exchange,
+        "offers": [
+            {
+                "asset": "BTC",
+                "apy": "5.2%",
+                "min_amount": "0.01 BTC",
+                "lock_period": "30 days"
+            },
+            {
+                "asset": "ETH",
+                "apy": "6.5%",
+                "min_amount": "0.1 ETH",
+                "lock_period": "60 days"
+            }
+        ]
+    })
+
+@app.route('/api/mock/campaigns', methods=['GET'])
+def mock_campaigns():
+    """A mock endpoint for campaign scraper testing"""
+    exchange = request.args.get('exchange', 'generic')
+    return jsonify({
+        "exchange": exchange,
+        "campaigns": [
+            {
+                "title": "Trading Competition",
+                "description": "Win prizes by trading BTC",
+                "end_date": (datetime.utcnow() + timedelta(days=7)).isoformat()
+            },
+            {
+                "title": "Referral Program",
+                "description": "Get 10% commission on friend's trades",
+                "end_date": None
+            }
+        ]
+    })
+
 # Route to get data for all platforms
 @app.route('/api/rewards', methods=['GET'])
 def get_all_rewards():

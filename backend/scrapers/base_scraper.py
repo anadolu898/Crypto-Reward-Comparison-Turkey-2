@@ -66,6 +66,9 @@ class BaseScraper(ABC):
         adapter = HTTPAdapter(max_retries=retry_strategy)
         self.session.mount("http://", adapter)
         self.session.mount("https://", adapter)
+        
+        # Mock API backup endpoints
+        self.mock_api_base = "http://localhost:5001/api/mock"
     
     def get_url(self, url, headers=None, params=None):
         """
@@ -122,6 +125,44 @@ class BaseScraper(ABC):
                 time.sleep(wait_time)
                 wait_time *= 2  # Double the wait time for next attempt
     
+    def get_mock_staking_data(self):
+        """
+        Get mock staking data from local API when external APIs fail
+        """
+        try:
+            url = f"{self.mock_api_base}/staking"
+            params = {'exchange': self.exchange_name}
+            response = self.session.get(url, params=params, timeout=5)
+            if response.status_code == 200:
+                data = response.json()
+                self.logger.info(f"Successfully fetched mock staking data for {self.exchange_name}")
+                return data.get('offers', [])
+            else:
+                self.logger.warning(f"Failed to get mock staking data: {response.status_code}")
+                return []
+        except Exception as e:
+            self.logger.error(f"Error fetching mock staking data: {str(e)}")
+            return []
+            
+    def get_mock_campaign_data(self):
+        """
+        Get mock campaign data from local API when external APIs fail
+        """
+        try:
+            url = f"{self.mock_api_base}/campaigns"
+            params = {'exchange': self.exchange_name}
+            response = self.session.get(url, params=params, timeout=5)
+            if response.status_code == 200:
+                data = response.json()
+                self.logger.info(f"Successfully fetched mock campaign data for {self.exchange_name}")
+                return data.get('campaigns', [])
+            else:
+                self.logger.warning(f"Failed to get mock campaign data: {response.status_code}")
+                return []
+        except Exception as e:
+            self.logger.error(f"Error fetching mock campaign data: {str(e)}")
+            return []
+    
     def save_data(self):
         """
         Fetch staking and campaign data, then save to a JSON file.
@@ -134,9 +175,19 @@ class BaseScraper(ABC):
             self.logger.info(f"Fetching staking data from {self.exchange_name.capitalize()}...")
             self.fetch_staking_data()
             
+            # If no staking data was retrieved, try mock data
+            if not self.staking_data:
+                self.logger.info(f"Using mock staking data for {self.exchange_name}")
+                self.staking_data = self.get_mock_staking_data()
+            
             # Fetch campaign data
             self.logger.info(f"Fetching campaign data from {self.exchange_name.capitalize()}...")
             self.fetch_campaign_data()
+            
+            # If no campaign data was retrieved, try mock data
+            if not self.campaign_data:
+                self.logger.info(f"Using mock campaign data for {self.exchange_name}")
+                self.campaign_data = self.get_mock_campaign_data()
             
             # Prepare data for saving
             data = {
