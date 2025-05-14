@@ -12,7 +12,7 @@ const ThemeProvider = dynamic(() => import('../components/layout/ThemeProvider')
 });
 
 export const metadata: Metadata = {
-  title: 'Crypto Rewards Türkiye - Kripto Para Staking ve Kampanya Karşılaştırma',
+  title: 'KriptoFaiz - Kripto Para Staking ve Kampanya Karşılaştırma',
   description: 'Türkiye\'deki kripto borsalarında sunulan staking, kampanya ve diğer ödül fırsatlarını karşılaştırın ve en iyi getiriyi elde edin.',
 };
 

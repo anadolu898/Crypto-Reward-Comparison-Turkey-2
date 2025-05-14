@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const Footer = () => {
   const [email, setEmail] = useState('');
@@ -25,7 +26,16 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {/* Company Info */}
           <div className="col-span-1 md:col-span-2 lg:col-span-1">
-            <h3 className="text-xl font-bold mb-4 gradient-text">KriptoKarşılaştır</h3>
+            <div className="flex items-center mb-4">
+              <Image 
+                src="/kriptofaiz-logo.svg" 
+                alt="KriptoFaiz Logo" 
+                width={40} 
+                height={40} 
+                className="mr-2"
+              />
+              <h3 className="text-xl font-bold gradient-text">KriptoFaiz</h3>
+            </div>
             <p className="text-gray-400 mb-6">
               Türkiye'deki kripto borsaları ve DeFi platformlarının staking, kampanya ve ödül fırsatlarını karşılaştırın.
             </p>
@@ -145,7 +155,7 @@ const Footer = () => {
         </div>
         
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; {new Date().getFullYear()} KriptoKarşılaştır, bir RightBehind şirketidir. Tüm hakları saklıdır.</p>
+          <p>&copy; {new Date().getFullYear()} KriptoFaiz, bir RightBehind şirketidir. Tüm hakları saklıdır.</p>
           <p className="mt-2 text-sm">
             Bu site yatırım tavsiyesi vermez. Kripto para yatırımları yüksek risk içerir.
           </p>

@@ -7,16 +7,16 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#5d32f4',
-        secondary: '#2e1a75',
-        accent: '#00E676',
-        'accent-alt': '#00e4a1',
-        dark: '#0B0F1B',
+        primary: '#0CD4B5',
+        secondary: '#220D53',
+        accent: '#0CD4B5',
+        'accent-alt': '#09A38A',
+        dark: '#220D53',
         light: '#f8f9fa',
-        'dark-card': '#111827',
+        'dark-card': '#2D1B5E',
         'light-card': '#ffffff',
-        'gradient-start': '#5d32f4',
-        'gradient-end': '#00C2FF',
+        'gradient-start': '#220D53',
+        'gradient-end': '#0CD4B5',
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],

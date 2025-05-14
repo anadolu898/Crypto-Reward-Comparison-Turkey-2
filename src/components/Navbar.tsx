@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useAuth } from '../lib/auth/AuthContext';
 
 const Navbar = () => {
@@ -77,8 +78,17 @@ const Navbar = () => {
         <div className="flex justify-between items-center">
           {/* Logo */}
           <Link href="/" className="flex items-center">
+            <div className="w-10 h-10 mr-2 relative">
+              <Image 
+                src="/kriptofaiz-logo.svg" 
+                alt="KriptoFaiz Logo" 
+                width={40} 
+                height={40} 
+                className="object-contain"
+              />
+            </div>
             <span className={`text-xl font-bold ${scrolled ? 'text-primary dark:text-white' : 'text-white dark:text-white'}`}>
-              KriptoKarşılaştır
+              KriptoFaiz
             </span>
           </Link>
 
