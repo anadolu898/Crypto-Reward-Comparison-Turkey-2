@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useAuth } from '../lib/auth/AuthContext';
+import Logo from './ui/Logo';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -60,20 +60,10 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <Link href="/" className="flex items-center">
-            <div className="w-10 h-10 mr-2 relative">
-              <Image 
-                src="/kriptofaiz-logo.svg" 
-                alt="KriptoFaiz Logo" 
-                width={40} 
-                height={40} 
-                className="object-contain"
-              />
-            </div>
-            <span className={`text-xl font-bold ${scrolled ? 'text-primary' : 'text-white'}`}>
-              KriptoFaiz
-            </span>
-          </Link>
+          <Logo 
+            variant={scrolled ? 'dark' : 'light'} 
+            textClassName={scrolled ? 'text-primary' : 'text-white'}
+          />
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
