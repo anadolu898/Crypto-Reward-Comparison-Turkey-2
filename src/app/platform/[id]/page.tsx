@@ -102,13 +102,13 @@ export default function PlatformPage({ params }: PlatformPageProps) {
 
   if (loading) {
     return (
-      <div className="py-16 bg-light dark:bg-dark">
+      <div className="py-16 bg-light">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status">
               <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Yükleniyor...</span>
             </div>
-            <p className="mt-4 text-gray-600 dark:text-gray-400">Platform bilgileri yükleniyor...</p>
+            <p className="mt-4 text-gray-600">Platform bilgileri yükleniyor...</p>
           </div>
         </div>
       </div>
@@ -117,10 +117,10 @@ export default function PlatformPage({ params }: PlatformPageProps) {
 
   if (error || !platformData) {
     return (
-      <div className="py-16 bg-light dark:bg-dark">
+      <div className="py-16 bg-light">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center">
-            <div className="bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 p-6 rounded-lg mb-8">
+            <div className="bg-red-100 text-red-800 p-6 rounded-lg mb-8">
               <h2 className="text-2xl font-bold mb-2">Hata</h2>
               <p>{error || 'Platform bilgileri bulunamadı.'}</p>
             </div>
@@ -134,7 +134,7 @@ export default function PlatformPage({ params }: PlatformPageProps) {
   }
 
   return (
-    <div className="py-12 bg-light dark:bg-dark">
+    <div className="py-12 bg-light">
       <div className="container mx-auto px-4">
         {/* Platform Header */}
         <div className="mb-12">
@@ -149,7 +149,7 @@ export default function PlatformPage({ params }: PlatformPageProps) {
               </div>
               <div>
                 <h1 className="text-3xl font-bold mb-2">{platformData.platform}</h1>
-                <p className="text-gray-600 dark:text-gray-400">
+                <p className="text-gray-600">
                   <a href={platformData.website} target="_blank" rel="noopener noreferrer" className="text-primary hover:text-secondary">
                     {platformData.website}
                   </a>
@@ -180,37 +180,37 @@ export default function PlatformPage({ params }: PlatformPageProps) {
           {platformData.stakingOffers.length > 0 ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {platformData.stakingOffers.map((offer: StakingOffer, index: number) => (
-                <div key={index} className="card border border-gray-200 dark:border-gray-700">
+                <div key={index} className="card border border-gray-200">
                   <div className="flex justify-between items-start mb-4">
                     <h3 className="text-xl font-semibold">{offer.coin} Staking</h3>
-                    <div className="bg-green-100 text-green-800 text-sm font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+                    <div className="bg-green-100 text-green-800 text-sm font-medium px-2.5 py-0.5 rounded">
                       {formatApy(offer.apy)}
                     </div>
                   </div>
                   
                   <div className="space-y-2 mb-4">
                     <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">Minimum Miktar:</span>
+                      <span className="text-gray-600">Minimum Miktar:</span>
                       <span className="font-medium">{offer.minStaking}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">Kilitleme Süresi:</span>
+                      <span className="text-gray-600">Kilitleme Süresi:</span>
                       <span className="font-medium">{offer.lockupPeriod} gün</span>
                     </div>
                   </div>
                   
                   <div className="mt-4">
-                    <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Özellikler:</h4>
+                    <h4 className="text-sm font-medium text-gray-700 mb-2">Özellikler:</h4>
                     <div className="flex flex-wrap gap-2">
                       {offer.features.map((feature, i) => (
-                        <span key={i} className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                        <span key={i} className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">
                           {feature}
                         </span>
                       ))}
                     </div>
                   </div>
                   
-                  <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <div className="mt-6 pt-4 border-t border-gray-200">
                     <a 
                       href={`${platformData.website}/staking`} 
                       target="_blank" 
@@ -227,8 +227,8 @@ export default function PlatformPage({ params }: PlatformPageProps) {
               ))}
             </div>
           ) : (
-            <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg text-center">
-              <p className="text-gray-600 dark:text-gray-400">Bu platform için staking fırsatı bulunamadı.</p>
+            <div className="bg-gray-50 p-6 rounded-lg text-center">
+              <p className="text-gray-600">Bu platform için staking fırsatı bulunamadı.</p>
             </div>
           )}
         </div>
@@ -240,20 +240,20 @@ export default function PlatformPage({ params }: PlatformPageProps) {
           {platformData.campaigns && platformData.campaigns.length > 0 ? (
             <div className="grid md:grid-cols-2 gap-6">
               {platformData.campaigns.map((campaign: Campaign, index: number) => (
-                <div key={index} className="card border border-gray-200 dark:border-gray-700">
+                <div key={index} className="card border border-gray-200">
                   <div className="flex justify-between items-start mb-2">
                     <h3 className="text-xl font-semibold">{campaign.name}</h3>
-                    <div className="bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
+                    <div className="bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded">
                       {campaign.expiryDate}
                     </div>
                   </div>
                   
-                  <p className="text-gray-600 dark:text-gray-400 mb-4">{campaign.description}</p>
+                  <p className="text-gray-600 mb-4">{campaign.description}</p>
                   
                   <div className="space-y-4">
                     <div>
-                      <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Gereksinimler:</h4>
-                      <ul className="list-disc list-inside text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                      <h4 className="text-sm font-medium text-gray-700 mb-2">Gereksinimler:</h4>
+                      <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
                         {campaign.requirements.map((req, i) => (
                           <li key={i}>{req}</li>
                         ))}
@@ -261,12 +261,12 @@ export default function PlatformPage({ params }: PlatformPageProps) {
                     </div>
                     
                     <div>
-                      <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ödül:</h4>
+                      <h4 className="text-sm font-medium text-gray-700 mb-1">Ödül:</h4>
                       <p className="text-sm font-semibold">{campaign.reward}</p>
                     </div>
                   </div>
                   
-                  <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <div className="mt-6 pt-4 border-t border-gray-200">
                     <a 
                       href={`${platformData.website}/campaigns`} 
                       target="_blank" 
@@ -283,8 +283,8 @@ export default function PlatformPage({ params }: PlatformPageProps) {
               ))}
             </div>
           ) : (
-            <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg text-center">
-              <p className="text-gray-600 dark:text-gray-400">Bu platform için aktif kampanya bulunamadı.</p>
+            <div className="bg-gray-50 p-6 rounded-lg text-center">
+              <p className="text-gray-600">Bu platform için aktif kampanya bulunamadı.</p>
             </div>
           )}
         </div>
@@ -299,7 +299,7 @@ export default function PlatformPage({ params }: PlatformPageProps) {
               <Link 
                 key={index}
                 href={`/platform/${platform.toLowerCase().replace(' ', '-')}`}
-                className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 text-center hover:border-primary hover:shadow-md transition-all"
+                className="bg-white p-4 rounded-lg border border-gray-200 text-center hover:border-primary hover:shadow-md transition-all"
               >
                 <span className="font-medium">{platform}</span>
               </Link>
@@ -323,7 +323,7 @@ export default function PlatformPage({ params }: PlatformPageProps) {
         </div>
 
         {/* Data Notice */}
-        <div className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
+        <div className="mt-8 text-center text-sm text-gray-500">
           <p>Son güncelleme: {new Date().toLocaleDateString('tr-TR')}</p>
           <p className="mt-1">
             Bu veriler bilgilendirme amaçlıdır ve yatırım tavsiyesi niteliği taşımaz.

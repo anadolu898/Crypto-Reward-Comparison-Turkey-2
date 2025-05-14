@@ -157,26 +157,26 @@ export default function PlatformsPage() {
         </div>
         {/* Wave divider */}
         <div className="absolute bottom-0 left-0 right-0">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" className="w-full h-12 fill-light dark:fill-dark">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" className="w-full h-12 fill-light">
             <path d="M0,96L48,80C96,64,192,32,288,26.7C384,21,480,43,576,58.7C672,75,768,85,864,80C960,75,1056,53,1152,48C1248,43,1344,53,1392,58.7L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
           </svg>
         </div>
       </div>
       
       {/* Main content area */}
-      <div className="py-14 bg-light dark:bg-dark">
+      <div className="py-14 bg-light">
         <div className="container mx-auto px-4">
           {loading ? (
             <div className="text-center py-24">
               <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status">
                 <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Yükleniyor...</span>
               </div>
-              <p className="mt-6 text-xl text-gray-600 dark:text-gray-400">Platform bilgileri yükleniyor...</p>
-              <p className="mt-2 text-gray-500 dark:text-gray-500">Lütfen bekleyin.</p>
+              <p className="mt-6 text-xl text-gray-600">Platform bilgileri yükleniyor...</p>
+              <p className="mt-2 text-gray-500">Lütfen bekleyin.</p>
             </div>
           ) : error ? (
             <div className="text-center py-16">
-              <div className="bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200 p-6 rounded-lg shadow-sm mb-6 max-w-xl mx-auto">
+              <div className="bg-red-100 text-red-800 p-6 rounded-lg shadow-sm mb-6 max-w-xl mx-auto">
                 <h3 className="text-xl font-bold mb-2">Bir Hata Oluştu</h3>
                 <p>{error}</p>
               </div>
@@ -193,10 +193,10 @@ export default function PlatformsPage() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {extendedPlatforms.map((platform, index) => (
-                  <div key={index} className="bg-white dark:bg-dark-card rounded-xl shadow-lg overflow-hidden transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl">
+                  <div key={index} className="bg-white rounded-xl shadow-lg overflow-hidden transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl">
                     <div className="p-6">
                       <div className="flex items-center mb-4">
-                        <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-800 mr-4 flex items-center justify-center">
+                        <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-100 mr-4 flex items-center justify-center">
                           <ExchangeLogo 
                             exchange={platform.platform} 
                             width={48} 
@@ -213,11 +213,11 @@ export default function PlatformsPage() {
                       </div>
                       
                       <div className="mt-4">
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                          Ödül Teklifleri: <span className="font-medium text-gray-900 dark:text-white">{platform.stakingOffers.length}</span>
+                        <p className="text-sm text-gray-600 mb-2">
+                          Ödül Teklifleri: <span className="font-medium text-gray-900">{platform.stakingOffers.length}</span>
                         </p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                          Kampanyalar: <span className="font-medium text-gray-900 dark:text-white">{platform.campaigns.length}</span>
+                        <p className="text-sm text-gray-600 mb-2">
+                          Kampanyalar: <span className="font-medium text-gray-900">{platform.campaigns.length}</span>
                         </p>
                         
                         {platform.stakingOffers.length > 0 && (
@@ -228,7 +228,7 @@ export default function PlatformsPage() {
                                 .sort((a, b) => parseFloat(b.apy) - parseFloat(a.apy))
                                 .slice(0, 3)
                                 .map((offer, idx) => (
-                                  <div key={idx} className="flex justify-between items-center bg-gray-50 dark:bg-gray-800 px-3 py-2 rounded">
+                                  <div key={idx} className="flex justify-between items-center bg-gray-50 px-3 py-2 rounded">
                                     <span>{offer.coin} ({offer.symbol})</span>
                                     <span className="font-bold text-accent">%{offer.apy}</span>
                                   </div>
@@ -253,45 +253,45 @@ export default function PlatformsPage() {
               
               <div className="mt-20 text-center">
                 <h2 className="text-2xl font-bold mb-4">Neden Platformları Karşılaştırmalısınız?</h2>
-                <p className="max-w-3xl mx-auto text-gray-600 dark:text-gray-400">
+                <p className="max-w-3xl mx-auto text-gray-600">
                   Kripto para platformları arasında getirileri, güvenliği ve özellikleri karşılaştırmak, 
                   yatırımlarınızdan maksimum verim almanızı sağlar. Her platform farklı avantajlar ve dezavantajlar sunar. 
                   Bizim karşılaştırma aracımız, bilinçli kararlar almanıza yardımcı olur.
                 </p>
                 
                 <div className="grid md:grid-cols-3 gap-6 mt-10">
-                  <div className="bg-white dark:bg-dark-card p-6 rounded-xl shadow">
+                  <div className="bg-white p-6 rounded-xl shadow">
                     <div className="text-primary text-3xl mb-4">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                       </svg>
                     </div>
                     <h3 className="text-lg font-bold mb-2">En Yüksek Getiriler</h3>
-                    <p className="text-gray-600 dark:text-gray-400">
+                    <p className="text-gray-600">
                       Platformlar arasındaki getiri oranlarını karşılaştırarak paranızı en verimli şekilde değerlendirin.
                     </p>
                   </div>
                   
-                  <div className="bg-white dark:bg-dark-card p-6 rounded-xl shadow">
+                  <div className="bg-white p-6 rounded-xl shadow">
                     <div className="text-primary text-3xl mb-4">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                       </svg>
                     </div>
                     <h3 className="text-lg font-bold mb-2">Güvenlik Faktörü</h3>
-                    <p className="text-gray-600 dark:text-gray-400">
+                    <p className="text-gray-600">
                       Platformların güvenlik önlemlerini ve geçmiş performanslarını analiz edin.
                     </p>
                   </div>
                   
-                  <div className="bg-white dark:bg-dark-card p-6 rounded-xl shadow">
+                  <div className="bg-white p-6 rounded-xl shadow">
                     <div className="text-primary text-3xl mb-4">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                     </div>
                     <h3 className="text-lg font-bold mb-2">Ücret Yapıları</h3>
-                    <p className="text-gray-600 dark:text-gray-400">
+                    <p className="text-gray-600">
                       İşlem, para yatırma ve çekme ücretlerini karşılaştırarak masrafları minimize edin.
                     </p>
                   </div>
@@ -301,7 +301,7 @@ export default function PlatformsPage() {
           )}
           
           {/* Data Update Notice */}
-          <div className="mt-16 text-center text-sm text-gray-500 dark:text-gray-400">
+          <div className="mt-16 text-center text-sm text-gray-500">
             <p>Son veri güncellemesi: {new Date().toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
             <p className="mt-1 max-w-2xl mx-auto">
               Bu veriler bilgilendirme amaçlıdır ve yatırım tavsiyesi niteliği taşımaz.

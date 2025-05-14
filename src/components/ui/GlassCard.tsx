@@ -56,13 +56,13 @@ export default function GlassCard({
 
   const baseStyle = `
     backdrop-filter backdrop-blur-lg 
-    bg-white/80 dark:bg-dark-card/${backgroundOpacity}
+    bg-white/${backgroundOpacity}
     rounded-xl p-6 md:p-7 transition-all duration-300
   `;
 
   const borderStyle = borderGradient
     ? 'border-transparent bg-clip-padding bg-origin-border'
-    : 'border-gray-200 dark:border-gray-700';
+    : 'border-gray-200';
 
   const borderWidthClass = `border-${borderWidth}`;
 
