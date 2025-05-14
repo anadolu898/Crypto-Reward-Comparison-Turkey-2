@@ -324,7 +324,9 @@ export default function Home() {
           className="absolute inset-0" 
           colors={['rgba(12, 212, 181, 0.03)', 'rgba(34, 13, 83, 0.05)', 'rgba(12, 212, 181, 0.03)']}
           duration={15}
-        />
+        >
+          <div className="absolute inset-0"></div>
+        </AnimatedGradient>
         
         <div className="container relative z-10">
           <AnimationWrapper animation="fadeIn">
