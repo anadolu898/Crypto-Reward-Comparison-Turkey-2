@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { apiService } from '../../lib/api';
 import { PlatformData } from '../../lib/types';
-import ExchangeLogo from '../../components/ui/ExchangeLogo';
 
 export default function PlatformsPage() {
   const [platforms, setPlatforms] = useState<PlatformData[]>([]);
@@ -197,10 +196,20 @@ export default function PlatformsPage() {
                     <div className="p-6">
                       <div className="flex items-center mb-4">
                         <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-100 mr-4 flex items-center justify-center">
-                          <ExchangeLogo 
-                            exchange={platform.platform} 
-                            width={48} 
-                            height={48} 
+                          <img 
+                            src={`/platform-logos/${platform.platform.toLowerCase().replace(/ /g, '-')}.png`}
+                            alt={`${platform.platform} Logo`}
+                            width={48}
+                            height={48}
+                            className="object-contain"
+                            onError={(e) => {
+                              // Fallback to first letter if image fails to load
+                              e.currentTarget.style.display = 'none';
+                              const container = e.currentTarget.parentElement;
+                              if (container) {
+                                container.innerHTML = `<span class="text-lg font-bold text-primary">${platform.platform.charAt(0)}</span>`;
+                              }
+                            }}
                           />
                         </div>
                         <div>

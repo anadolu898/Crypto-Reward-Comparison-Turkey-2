@@ -9,7 +9,7 @@ import CounterAnimation from '../components/ui/CounterAnimation';
 import GlassCard from '../components/ui/GlassCard';
 import ParticleBackground from '../components/ui/ParticleBackground';
 import TypeWriter from '../components/ui/TypeWriter';
-import LogoCarousel from '../components/ui/LogoCarousel';
+import SimpleLogoCarousel from '../components/ui/SimpleLogoCarousel';
 import AnimatedGradient from '../components/ui/AnimatedGradient';
 
 export default function Home() {
@@ -46,15 +46,14 @@ export default function Home() {
     { id: 5, name: 'Cardano', symbol: 'ADA', rewardRate: '8.2%', price: '4.50 ₺', stakingMin: '100 ADA', platform: 'Paribu' },
   ];
 
-  // Data for platform logos
-  const platformLogos = [
-    { exchange: 'BtcTurk', width: 120, height: 40 },
-    { exchange: 'Paribu', width: 120, height: 40 },
-    { exchange: 'Binance', width: 120, height: 40 },
-    { exchange: 'Binance TR', width: 120, height: 40 },
-    { exchange: 'Bitci', width: 120, height: 40 },
-    { exchange: 'Bitexen', width: 120, height: 40 },
-    { exchange: 'CoinTR', width: 120, height: 40 },
+  // Direct paths to logo images
+  const logoFiles = [
+    '/platform-logos/binance.png',
+    '/platform-logos/btcturk.png',
+    '/platform-logos/paribu.png',
+    '/platform-logos/bitexen.png',
+    '/platform-logos/bitci.png',
+    '/platform-logos/cointr.png',
   ];
 
   // Stats for animated counters
@@ -182,8 +181,10 @@ export default function Home() {
             <AnimationWrapper animation="fadeIn" delay={1}>
               <div className="mt-16 hidden md:block">
                 <p className="text-gray-400 mb-4">Güvenilir Platformlar</p>
-                <LogoCarousel 
-                  logos={platformLogos}
+                <SimpleLogoCarousel 
+                  logos={logoFiles}
+                  width={120}
+                  height={40}
                   speed={35}
                   pauseOnHover={true}
                 />
