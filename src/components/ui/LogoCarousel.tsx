@@ -140,3 +140,4 @@ export default function LogoCarousel({
       </motion.div>
     </div>
   );
+}
