@@ -77,13 +77,14 @@ export default function LogoCarousel({
     return (
       <div
         key={index}
-        className={`flex items-center justify-center ${itemClassName}`}
+        className={`flex items-center justify-center p-2 mx-4 ${itemClassName}`}
+        style={{ minWidth: (logo.width || 140) + 16 }}
       >
         <ExchangeLogo
           exchange={logo.exchange}
           width={logo.width || 140}
           height={logo.height || 50}
-          className="opacity-80 hover:opacity-100 transition-opacity duration-300 hover:scale-105 transform"
+          className="transition-opacity duration-300 hover:opacity-100 opacity-90"
         />
       </div>
     );
@@ -91,7 +92,7 @@ export default function LogoCarousel({
 
   if (prefersReducedMotion) {
     return (
-      <div className={`flex flex-wrap justify-center gap-12 ${className}`}>
+      <div className={`flex flex-wrap justify-center gap-8 ${className}`}>
         {logos.map((logo, index) => getLogoElement(logo, index))}
       </div>
     );
@@ -102,6 +103,7 @@ export default function LogoCarousel({
       className={`overflow-hidden ${className}`}
       onMouseEnter={() => pauseOnHover && setIsHovered(true)}
       onMouseLeave={() => pauseOnHover && setIsHovered(false)}
+      style={{ width: '100%' }}
     >
       <motion.div
         className="flex"
@@ -109,14 +111,7 @@ export default function LogoCarousel({
         animate={isHovered ? 'paused' : 'animate'}
         style={{ '--x-position': '0%' } as any}
       >
-        {duplicatedLogos.map((logo, index) => (
-          <div
-            key={index}
-            className={`flex items-center justify-center mx-12 ${itemClassName}`}
-          >
-            {getLogoElement(logo, index)}
-          </div>
-        ))}
+        {duplicatedLogos.map((logo, index) => getLogoElement(logo, index))}
       </motion.div>
     </div>
   );

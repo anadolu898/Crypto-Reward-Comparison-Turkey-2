@@ -201,7 +201,6 @@ export default function PlatformsPage() {
                             exchange={platform.platform} 
                             width={48} 
                             height={48} 
-                            className="object-contain"
                           />
                         </div>
                         <div>

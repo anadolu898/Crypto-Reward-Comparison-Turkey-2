@@ -5,7 +5,19 @@ set -e
 
 # First kill any existing servers
 echo "Stopping any existing servers..."
-./kill-servers.sh
+./kill-servers.sh || true
+
+# Check if port 3000 is available
+if lsof -i :3000 >/dev/null 2>&1; then
+  echo "Port 3000 is already in use. Killing the process..."
+  lsof -i :3000 | grep LISTEN | awk '{print $2}' | xargs kill -9
+fi
+
+# Check if port 5001 is available
+if lsof -i :5001 >/dev/null 2>&1; then
+  echo "Port 5001 is already in use. Killing the process..."
+  lsof -i :5001 | grep LISTEN | awk '{print $2}' | xargs kill -9
+fi
 
 # Create necessary directories
 echo "Creating required directories..."

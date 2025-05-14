@@ -48,12 +48,13 @@ export default function Home() {
 
   // Data for platform logos
   const platformLogos = [
-    { exchange: 'BtcTurk', width: 150, height: 50 },
-    { exchange: 'Paribu', width: 150, height: 50 },
-    { exchange: 'Binance', width: 150, height: 50 },
-    { exchange: 'Bitci', width: 150, height: 50 },
-    { exchange: 'Bitexen', width: 150, height: 50 },
-    { exchange: 'CoinTR', width: 150, height: 50 },
+    { exchange: 'BtcTurk', width: 120, height: 40 },
+    { exchange: 'Paribu', width: 120, height: 40 },
+    { exchange: 'Binance', width: 120, height: 40 },
+    { exchange: 'Binance TR', width: 120, height: 40 },
+    { exchange: 'Bitci', width: 120, height: 40 },
+    { exchange: 'Bitexen', width: 120, height: 40 },
+    { exchange: 'CoinTR', width: 120, height: 40 },
   ];
 
   // Stats for animated counters
